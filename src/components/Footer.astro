@@ -35,7 +35,7 @@ const sosmed = (
 	class="-mb-px h-10 md:h-16"
 	flip
 />
-<footer class="bg-brand-green-dark pb-24 text-white/85 lg:pb-0">
+<footer class="bg-brand-green-dark text-white/85">
 	<div class="container-page grid gap-10 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
 		<div class="space-y-3">
 			<p class="text-lg font-bold text-white">{PROJECT_NAME}</p>
@@ -92,10 +92,10 @@ const sosmed = (
 
 		<nav aria-label="Menu footer">
 			<p class="mb-3 text-sm font-semibold text-white">Halaman</p>
-			<ul class="grid grid-cols-2 gap-x-4 text-sm md:grid-cols-1">
+			<ul class="grid grid-cols-2 gap-x-6 text-sm">
 				{NAV.map((item) => (
 					<li>
-						<a href={item.href} class="inline-flex min-h-10 items-center hover:text-white">
+						<a href={item.href} class="inline-flex min-h-11 items-center hover:text-white">
 							{item.label}
 						</a>
 					</li>

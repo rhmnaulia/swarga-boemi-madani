@@ -2,17 +2,20 @@
 interface Props {
 	/** House type names for the "minat" options, from the CMS. */
 	tipe: string[];
-	/** Preselect an option, e.g. when linked from a house type page. */
-	selected?: string;
+	/** Preselect an option, e.g. `?minat=` from a house type page. Ignored unless it matches. */
+	selected?: string | null;
 }
 
 const { tipe, selected } = Astro.props;
 const minat = [...tipe.map((t) => `Rumah tipe ${t}`), "Jasa konstruksi", "Lainnya"];
+const preselect = selected && minat.includes(selected) ? selected : null;
 const hari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu", "Fleksibel"];
 
+// Errors show only after the person has touched a field (`:user-invalid`), never on load.
 const field =
-	"border-line focus:border-brand-green mt-1.5 block min-h-12 w-full rounded-(--radius-btn) border bg-white px-3.5 text-base outline-none";
+	"peer border-line focus:border-brand-green user-invalid:border-danger mt-1.5 block min-h-12 w-full rounded-(--radius-btn) border bg-white px-3.5 text-base outline-none transition-colors";
 const label = "block text-sm font-semibold";
+const error = "text-danger mt-1 hidden text-sm peer-user-invalid:block";
 ---
 
 <form method="post" action="/api/lead" class="space-y-5" data-survey-form>
@@ -31,9 +34,12 @@ const label = "block text-sm font-semibold";
 			minlength="2"
 			maxlength="80"
 			autocomplete="name"
+			autocapitalize="words"
+			enterkeyhint="next"
 			placeholder="Nama Anda"
 			class={field}
 		/>
+		<p class={error}>Isi nama Anda (minimal 2 huruf).</p>
 	</div>
 
 	<div>
@@ -49,45 +55,41 @@ const label = "block text-sm font-semibold";
 			pattern="^(\+?62|0)8[0-9\s\-]{7,15}$"
 			maxlength="20"
 			autocomplete="tel"
+			enterkeyhint="next"
 			placeholder="08xx xxxx xxxx"
-			aria-describedby="whatsapp-hint"
 			class={field}
 		/>
-		<p id="whatsapp-hint" class="text-muted mt-1 text-sm">
-			Contoh: 0812 3456 7890
-		</p>
+		<p class={error}>Gunakan nomor HP Indonesia, contoh 0812 3456 7890.</p>
 	</div>
 
-	<div class="grid gap-5 sm:grid-cols-2">
-		<div>
-			<label for="minat" class={label}>
-				Minat
-			</label>
-			<select id="minat" name="minat" required class={field}>
-				<option value="" disabled selected={!selected}>
-					Pilih salah satu
+	<div>
+		<label for="minat" class={label}>
+			Minat
+		</label>
+		<select id="minat" name="minat" required class={field}>
+			<option value="" disabled selected={!preselect}>
+				Pilih salah satu
+			</option>
+			{minat.map((m) => (
+				<option value={m} selected={m === preselect}>
+					{m}
 				</option>
-				{minat.map((m) => (
-					<option value={m} selected={m === selected}>
-						{m}
-					</option>
-				))}
-			</select>
-		</div>
-		<div>
-			<label for="hari" class={label}>
-				Hari survei yang diinginkan
-			</label>
-			<select id="hari" name="hari" required class={field}>
-				<option value="" disabled selected>
-					Pilih hari
-				</option>
-				{hari.map((h) => (
-					<option value={h}>{h}</option>
-				))}
-			</select>
-		</div>
+			))}
+		</select>
+		<p class={error}>Pilih salah satu.</p>
 	</div>
+
+	<fieldset>
+		<legend class={label}>Hari survei yang diinginkan</legend>
+		<div class="mt-2 grid grid-cols-4 gap-2">
+			{hari.map((h, i) => (
+				<label class="border-line has-checked:border-brand-green has-checked:bg-brand-green has-checked:text-paper has-focus-visible:outline-brand-orange pressable flex min-h-11 cursor-pointer items-center justify-center rounded-(--radius-btn) border bg-white px-1 text-sm font-semibold transition-colors has-focus-visible:outline-2 has-focus-visible:outline-offset-2">
+					<input type="radio" name="hari" value={h} required={i === 0} class="sr-only" />
+					{h}
+				</label>
+			))}
+		</div>
+	</fieldset>
 
 	<div>
 		<label for="catatan" class={label}>
@@ -116,8 +118,27 @@ const label = "block text-sm font-semibold";
 
 	<button
 		type="submit"
-		class="bg-brand-orange hover:bg-brand-orange-dark pressable inline-flex min-h-12 w-full items-center justify-center rounded-(--radius-btn) px-6 font-semibold text-white transition-colors sm:w-auto"
+		class="bg-brand-orange hover:bg-brand-orange-dark pressable inline-flex min-h-12 w-full items-center justify-center rounded-(--radius-btn) px-6 font-semibold text-white transition-colors disabled:opacity-70 sm:w-auto"
+		data-submit
 	>
 		Jadwalkan Survei Lokasi
 	</button>
 </form>
+
+<script>
+	document.querySelectorAll<HTMLFormElement>("[data-survey-form]").forEach((form) => {
+		const button = form.querySelector<HTMLButtonElement>("[data-submit]");
+		if (!button) return;
+		const idle = button.textContent;
+		form.addEventListener("submit", () => {
+			// Only fires once the browser's own validation has passed. Blocks double taps.
+			button.disabled = true;
+			button.textContent = "Mengirim…";
+		});
+		// Back button restores the page from cache with the button still disabled.
+		window.addEventListener("pageshow", () => {
+			button.disabled = false;
+			button.textContent = idle;
+		});
+	});
+</script>

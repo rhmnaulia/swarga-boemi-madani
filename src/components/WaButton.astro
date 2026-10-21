@@ -6,7 +6,7 @@ import Icon from "./Icon.astro";
 interface Props {
 	ctx?: WaContext;
 	label?: string;
-	variant?: "primary" | "outline" | "light";
+	variant?: "primary" | "outline";
 	class?: string;
 }
 
@@ -24,7 +24,6 @@ const houseType = ctx.kind === "tipe" ? ctx.nama.toLowerCase() : "";
 const styles = {
 	primary: "bg-brand-orange text-white hover:bg-brand-orange-dark",
 	outline: "border border-brand-green text-brand-green bg-transparent hover:bg-brand-green-soft",
-	light: "bg-white text-brand-green-dark hover:bg-brand-green-soft",
 };
 ---
 

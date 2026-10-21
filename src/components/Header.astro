@@ -1,5 +1,5 @@
 ---
-import { NAV, SHORT_NAME } from "../content/site";
+import { NAV, SHORT_NAME, WA_DISPLAY, WA_TEL } from "../content/site";
 import Icon from "./Icon.astro";
 import WaButton from "./WaButton.astro";
 
@@ -96,13 +96,32 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 				))}
 			</ul>
 		</nav>
-		<div class="border-line border-t p-4">
+		<div class="border-line space-y-2 border-t p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
 			<WaButton label="Chat via WhatsApp" class="w-full" />
+			<a
+				href={`tel:${WA_TEL}`}
+				class="border-line pressable inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-(--radius-btn) border bg-white font-semibold"
+			>
+				<Icon name="phone" class="size-5" />
+				Telepon {WA_DISPLAY}
+			</a>
 		</div>
 	</div>
 </dialog>
 
 <style>
+	/* Phones: header slides away while reading down, returns on any upward scroll. */
+	.site-header {
+		transition: transform 220ms var(--ease-out);
+	}
+	.site-header[data-hidden] {
+		transform: translateY(-100%);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.site-header {
+			transition: none;
+		}
+	}
 	.site-header {
 		background: color-mix(in srgb, var(--color-paper) 88%, transparent);
 		backdrop-filter: blur(16px) saturate(160%);
@@ -175,6 +194,23 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 </style>
 
 <script>
+	const header = document.querySelector<HTMLElement>(".site-header");
+	const phone = window.matchMedia("(max-width: 1023px)");
+	let lastY = window.scrollY;
+	window.addEventListener(
+		"scroll",
+		() => {
+			const y = window.scrollY;
+			const delta = y - lastY;
+			if (!header || Math.abs(delta) < 6) return;
+			header.toggleAttribute("data-hidden", phone.matches && delta > 0 && y > 120);
+			lastY = y;
+		},
+		{ passive: true },
+	);
+	// A keyboard user tabbing into the header must always see it.
+	header?.addEventListener("focusin", () => header.removeAttribute("data-hidden"));
+
 	const sheet = document.querySelector<HTMLDialogElement>("[data-nav]");
 	const opener = document.querySelector<HTMLButtonElement>("[data-nav-open]");
 	if (sheet && opener) {

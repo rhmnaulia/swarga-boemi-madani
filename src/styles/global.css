@@ -18,6 +18,7 @@
 	--color-ink: #1b2a21;
 	--color-muted: #56635a;
 	--color-line: #e3d9c8;
+	--color-danger: #b42318;
 
 	--font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
 
@@ -31,7 +32,13 @@
 @layer base {
 	html {
 		-webkit-text-size-adjust: 100%;
+		-webkit-tap-highlight-color: transparent;
 		scroll-padding-top: 5rem;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
+		}
 	}
 	body {
 		@apply bg-paper text-ink font-sans antialiased;
@@ -86,7 +93,23 @@
 	transition-delay: calc(var(--i, 0) * 50ms);
 }
 
+/* Page-to-page cross-fade (Chrome, Safari 18.2+; others just navigate). The header stays put. */
+@view-transition {
+	navigation: auto;
+}
+.site-header {
+	view-transition-name: site-header;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 180ms;
+	animation-timing-function: var(--ease-out);
+}
+
 @media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: none;
+	}
 	.js .reveal:not(.is-in) {
 		transform: none;
 	}

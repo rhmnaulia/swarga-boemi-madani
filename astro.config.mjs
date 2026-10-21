@@ -23,5 +23,8 @@ export default defineConfig({
 	vite: {
 		plugins: [tailwindcss()],
 	},
+	// Fetch internal pages as their links scroll into view, so the tap that follows feels instant.
+	// Astro skips this on Save-Data and 2G connections.
+	prefetch: { prefetchAll: true, defaultStrategy: "viewport" },
 	devToolbar: { enabled: false },
 });

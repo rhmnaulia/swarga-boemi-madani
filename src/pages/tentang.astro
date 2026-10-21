@@ -18,7 +18,7 @@ import Base from "../layouts/Base.astro";
 >
 	<PageHeader title="Tentang kami" intro="Developer perumahan dan kontraktor dari Kebumen." />
 
-	<section class="container-page grid gap-10 py-10 md:py-14 lg:grid-cols-[1.4fr_1fr]">
+	<section class="container-page grid gap-10 pt-8 pb-12 md:pt-10 md:pb-16 lg:grid-cols-[1.4fr_1fr]">
 		<div class="max-w-2xl space-y-4 text-lg">
 			{PROFIL.map((p) => (
 				<p>{p}</p>
@@ -34,10 +34,10 @@ import Base from "../layouts/Base.astro";
 	</section>
 
 	{PENDIRI.length > 0 && (
-		<section class="border-line border-t py-12">
+		<section class="border-line border-t py-12 md:py-16">
 			<div class="container-page">
 				<h2 class="text-2xl md:text-3xl">Pendiri</h2>
-				<ul class="mt-6 grid gap-6 md:grid-cols-2">
+				<ul class="mt-6 md:mt-8 grid gap-6 md:grid-cols-2">
 					{PENDIRI.map((p) => (
 						<li>
 							<p class="text-lg font-bold">{p.name}</p>
@@ -51,10 +51,10 @@ import Base from "../layouts/Base.astro";
 	)}
 
 	{NILAI_CARE.length > 0 && (
-		<section class="bg-sand py-12">
+		<section class="bg-sand py-12 md:py-16">
 			<div class="container-page">
 				<h2 class="text-2xl md:text-3xl">Nilai kami: CARE</h2>
-				<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+				<ul class="mt-6 md:mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 					{NILAI_CARE.map((v) => (
 						<li>
 							<p class="text-brand-green text-4xl font-bold">{v.letter}</p>
@@ -71,7 +71,7 @@ import Base from "../layouts/Base.astro";
 		<div class="container-page grid gap-10 lg:grid-cols-2">
 			<div>
 				<h2 class="text-2xl md:text-3xl">Legalitas perusahaan</h2>
-				<dl class="mt-6 divide-y divide-(--color-line)">
+				<dl class="mt-6 md:mt-8 divide-y divide-(--color-line)">
 					{LEGALITAS_PERUSAHAAN.map((l) => (
 						<div class="grid gap-1 py-3 sm:grid-cols-[10rem_1fr]">
 							<dt class="text-muted">{l.label}</dt>
@@ -82,7 +82,7 @@ import Base from "../layouts/Base.astro";
 			</div>
 			<div>
 				<h2 class="text-2xl md:text-3xl">Perizinan proyek</h2>
-				<ul class="mt-6 space-y-3">
+				<ul class="mt-6 md:mt-8 space-y-3">
 					{LEGALITAS_PROYEK.map((l) => (
 						<li class="flex items-start gap-3">
 							<Icon name="check" class="text-brand-green mt-0.5 size-5 shrink-0" />

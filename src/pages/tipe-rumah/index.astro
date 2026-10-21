@@ -24,7 +24,7 @@ const houses = await getHouseTypes(Astro.cache);
 		</p>
 	</PageHeader>
 
-	<section class="container-page py-10 md:py-14">
+	<section class="container-page pt-8 pb-12 md:pt-10 md:pb-16">
 		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 			{houses.map((h, i) => (
 				<HouseCard slug={h.id} house={h.data} priority={i < 2} class="reveal" style={`--i: ${i}`} />

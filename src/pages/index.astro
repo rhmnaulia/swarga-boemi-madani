@@ -20,12 +20,12 @@ const sisa = pengaturan?.total_sisa_unit;
 <Base
 	title={PROJECT_NAME}
 	description="Perumahan di Gombong, Kebumen. Rumah tipe 36 sampai 80 dengan smart lock, one gate system, dan gratis SHM, BPHTB, AJB, balik nama & notaris."
-	floatAfterHero
+	dockAfterHero
 >
 	<!-- Hero: forest band, edge-to-edge photo, hills hand over to the cream page -->
 	<section data-hero class="bg-brand-green-dark text-paper relative overflow-hidden">
 		<div class="container-page relative z-10 grid gap-10 pt-10 md:pt-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-0">
-			<div class="pb-2 lg:py-20">
+			<div class="pb-2 lg:pt-14 lg:pb-36">
 				<p class="text-sage text-sm font-semibold tracking-wide">{TAGLINE}</p>
 				<h1 class="mt-3 text-[2.4rem] leading-[1.04] md:text-6xl xl:text-[4rem]">
 					Hunian modern dengan pemandangan yang indah
@@ -91,7 +91,7 @@ const sisa = pengaturan?.total_sisa_unit;
 				</a>
 			</div>
 		</div>
-		<div class="container-page mt-7 flex snap-x snap-mandatory scroll-pl-4 gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
+		<div class="container-page mt-6 md:mt-8 flex snap-x snap-mandatory scroll-pl-4 gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">
 			{houses.map((h, i) => (
 				<HouseCard
 					slug={h.id}
@@ -141,7 +141,7 @@ const sisa = pengaturan?.total_sisa_unit;
 				Setiap rumah melewati pengecekan kualitas yang terdokumentasi, dari material sampai kunci
 				diserahkan.
 			</p>
-			<ol class="mt-8 space-y-6">
+			<ol class="mt-6 md:mt-8 space-y-6">
 				{QC_STEPS.map((s, i) => (
 					<li class="reveal flex gap-4" style={`--i: ${i}`}>
 						<span class="text-brand-orange w-8 shrink-0 text-3xl leading-none font-extrabold tabular-nums">
@@ -178,7 +178,7 @@ const sisa = pengaturan?.total_sisa_unit;
 		<section class="border-line border-t py-12 md:py-16">
 			<div class="container-page">
 				<h2 class="text-3xl md:text-4xl">Kata pembeli kami</h2>
-				<ul class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<ul class="mt-6 md:mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{testimonials.map((t, i) => (
 						<li
 							class="reveal border-line rounded-(--radius-card) border bg-white p-6"

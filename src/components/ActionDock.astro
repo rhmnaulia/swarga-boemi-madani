@@ -1,0 +1,136 @@
+---
+import { WA_TEL } from "../content/site";
+import { getPengaturan } from "../lib/cms";
+import { buildWaLink, type WaContext } from "../lib/wa";
+import Icon from "./Icon.astro";
+
+// Phones: a bottom dock with the two actions that matter, which reserves its own space
+// (Base pads <body>) so it never covers content. Desktop: a small floating WhatsApp pill.
+
+interface Props {
+	ctx?: WaContext;
+	/** Keep hidden until the hero (`[data-hero]`) scrolls out; the hero has its own CTAs. */
+	afterHero?: boolean;
+	/** Where "Jadwalkan Survei" points; on the contact page the dock offers a phone call instead. */
+	surveyHref?: string | null;
+}
+
+const { ctx = { kind: "umum" }, afterHero = false, surveyHref = "/kontak#survei" } = Astro.props;
+const pengaturan = await getPengaturan(Astro.cache);
+const waHref = buildWaLink(ctx, pengaturan?.whatsapp);
+const houseType = ctx.kind === "tipe" ? ctx.nama.toLowerCase() : "";
+const secondary = "border-line bg-white text-ink";
+---
+
+<div
+	class="action-dock border-line fixed inset-x-0 bottom-0 z-30 border-t lg:hidden"
+	data-dock
+	data-after-hero={afterHero ? "" : undefined}
+>
+	<div class="flex gap-2 px-4 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+		{surveyHref ? (
+			<a
+				href={surveyHref}
+				class:list={[
+					"pressable inline-flex min-h-12 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) border px-3 text-sm font-semibold whitespace-nowrap",
+					secondary,
+				]}
+			>
+				<Icon name="calendar" class="size-5" />
+				Survei Lokasi
+			</a>
+		) : (
+			<a
+				href={`tel:${WA_TEL}`}
+				class:list={[
+					"pressable inline-flex min-h-12 flex-1 items-center justify-center gap-1.5 rounded-(--radius-btn) border px-3 text-sm font-semibold whitespace-nowrap",
+					secondary,
+				]}
+			>
+				<Icon name="phone" class="size-5" />
+				Telepon
+			</a>
+		)}
+		<a
+			href={waHref}
+			target="_blank"
+			rel="noopener"
+			data-wa
+			data-house-type={houseType}
+			class="bg-brand-orange pressable inline-flex min-h-12 flex-1 items-center whitespace-nowrap justify-center gap-2 rounded-(--radius-btn) px-3 text-sm font-semibold text-white"
+		>
+			<Icon name="whatsapp" class="size-5" />
+			Chat WhatsApp
+		</a>
+	</div>
+</div>
+
+<a
+	href={waHref}
+	target="_blank"
+	rel="noopener"
+	data-wa
+	data-house-type={houseType}
+	data-dock
+	data-after-hero={afterHero ? "" : undefined}
+	class="wa-pill bg-brand-green pressable fixed right-6 bottom-6 z-30 hidden h-14 items-center gap-2 rounded-full pr-5 pl-4 font-semibold text-white lg:inline-flex"
+	aria-label="Chat Marketing via WhatsApp"
+>
+	<Icon name="whatsapp" class="size-6" />
+	<span>Chat</span>
+</a>
+
+<style>
+	.action-dock {
+		background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+		backdrop-filter: blur(16px) saturate(160%);
+		-webkit-backdrop-filter: blur(16px) saturate(160%);
+	}
+	@media (prefers-reduced-transparency: reduce) {
+		.action-dock {
+			background: var(--color-paper);
+			backdrop-filter: none;
+		}
+	}
+	.wa-pill {
+		box-shadow: 0 6px 20px rgb(20 40 25 / 0.28);
+	}
+	.action-dock,
+	.wa-pill {
+		transition:
+			transform 220ms var(--ease-out),
+			opacity 220ms var(--ease-out);
+	}
+	/* Leaves the way it came: down past the screen edge. */
+	.action-dock[data-hidden] {
+		transform: translateY(100%);
+	}
+	.wa-pill[data-hidden] {
+		opacity: 0;
+		transform: translateY(8px);
+		pointer-events: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.action-dock[data-hidden] {
+			transform: none;
+			opacity: 0;
+			pointer-events: none;
+		}
+		.wa-pill[data-hidden] {
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	const docks = document.querySelectorAll<HTMLElement>("[data-dock][data-after-hero]");
+	const hero = document.querySelector("[data-hero]");
+	if (docks.length && hero && "IntersectionObserver" in window) {
+		new IntersectionObserver(([entry]) => {
+			docks.forEach((el) => {
+				el.toggleAttribute("data-hidden", entry.isIntersecting);
+				el.inert = entry.isIntersecting;
+			});
+		}).observe(hero);
+	}
+</script>

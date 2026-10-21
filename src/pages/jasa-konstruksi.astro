@@ -27,9 +27,9 @@ const wa: WaContext = { kind: "konstruksi" };
 		</div>
 	</PageHeader>
 
-	<section class="container-page py-12 md:py-16">
+	<section class="container-page pt-8 pb-12 md:pt-10 md:pb-16">
 		<h2 class="text-2xl md:text-3xl">Layanan</h2>
-		<ul class="mt-6 grid gap-4 md:grid-cols-3">
+		<ul class="mt-6 md:mt-8 grid gap-4 md:grid-cols-3">
 			{LAYANAN.map((l, i) => (
 				<li
 					class="reveal border-line rounded-(--radius-card) border bg-white p-5"
@@ -52,7 +52,7 @@ const wa: WaContext = { kind: "konstruksi" };
 		<section class="bg-sand py-12 md:py-16">
 			<div class="container-page">
 				<h2 class="text-2xl md:text-3xl">Proyek yang sudah kami kerjakan</h2>
-				<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				<ul class="mt-6 md:mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					{projects.map((p, i) => (
 						<li class="reveal" style={`--i: ${i % 3}`}>
 							<Media
@@ -73,10 +73,17 @@ const wa: WaContext = { kind: "konstruksi" };
 		</section>
 	)}
 
-	<section class="container-page grid gap-10 py-12 md:py-16 lg:grid-cols-[1.4fr_1fr]">
+	<!-- Same background as "Layanan" when the portfolio is hidden: drop the top padding so the
+	     two paddings do not stack into one dead gap. -->
+	<section
+		class:list={[
+			"container-page grid gap-10 pb-12 md:pb-16 lg:grid-cols-[1.4fr_1fr]",
+			projects.length > 0 ? "pt-12 md:pt-16" : "pt-4",
+		]}
+	>
 		<div>
 			<h2 class="text-2xl md:text-3xl">Alur kerja sama</h2>
-			<ol class="mt-6 space-y-5">
+			<ol class="mt-6 md:mt-8 space-y-5">
 				{ALUR.map((s, i) => (
 					<li class="reveal flex gap-4" style={`--i: ${i}`}>
 						<span class="bg-brand-green grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold text-white">
@@ -103,13 +110,14 @@ const wa: WaContext = { kind: "konstruksi" };
 		</div>
 	</section>
 
-	<section class="bg-brand-green-dark py-12 text-white">
-		<div class="container-page flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
+	<!-- Light card, not a dark band: the dark footer follows right after. -->
+	<section class="container-page pb-12 md:pb-16">
+		<div class="bg-brand-green-soft flex flex-col items-start gap-5 rounded-(--radius-card) p-6 md:flex-row md:items-center md:justify-between md:p-10">
 			<div>
-				<h2 class="text-2xl">Ceritakan rencana Anda</h2>
-				<p class="mt-1 text-white/85">Konsultasi awal gratis, cukup lewat WhatsApp.</p>
+				<h2 class="text-brand-green-dark text-2xl md:text-3xl">Ceritakan rencana Anda</h2>
+				<p class="text-muted mt-2">Konsultasi awal gratis, cukup lewat WhatsApp.</p>
 			</div>
-			<WaButton ctx={wa} label="Konsultasi via WhatsApp" variant="light" />
+			<WaButton ctx={wa} label="Konsultasi via WhatsApp" />
 		</div>
 	</section>
 </Base>

@@ -4,10 +4,10 @@ import type { IconName } from "../components/icons";
 import MapEmbed from "../components/MapEmbed.astro";
 import PageHeader from "../components/PageHeader.astro";
 import SurveyForm from "../components/SurveyForm.astro";
-import WaButton from "../components/WaButton.astro";
-import { ADDRESS_LINE, WA_DISPLAY } from "../content/site";
+import { ADDRESS_LINE, WA_DISPLAY, WA_TEL } from "../content/site";
 import Base from "../layouts/Base.astro";
 import { getHouseTypes, getPengaturan } from "../lib/cms";
+import { buildWaLink } from "../lib/wa";
 
 const [pengaturan, houses] = await Promise.all([
 	getPengaturan(Astro.cache),
@@ -22,61 +22,86 @@ const sosmed = (
 		["youtube", "YouTube", p?.youtube],
 	] as [IconName, string, string | undefined][]
 ).filter(([, , url]) => url);
+
+// One tap per row: each contact method opens the right app on a phone.
+const kontak: { icon: IconName; label: string; value: string; href: string; external?: boolean }[] =
+	[
+		{
+			icon: "whatsapp",
+			label: "WhatsApp",
+			value: WA_DISPLAY,
+			href: buildWaLink({ kind: "umum" }, p?.whatsapp),
+			external: true,
+		},
+		{ icon: "phone", label: "Telepon", value: WA_DISPLAY, href: `tel:${WA_TEL}` },
+		...(p?.email
+			? [{ icon: "mail" as const, label: "Email", value: p.email, href: `mailto:${p.email}` }]
+			: []),
+	];
 ---
 
 <Base
 	title="Kontak & Survei Lokasi"
 	description="Hubungi marketing Swarga Boemi Madani via WhatsApp 0811-2052-225 atau jadwalkan survei lokasi di Gombong, Kebumen."
+	surveyHref={null}
 >
-	<PageHeader title="Kontak" intro="Tim marketing kami siap menjawab lewat WhatsApp.">
-		<div class="mt-6">
-			<WaButton />
-		</div>
-	</PageHeader>
+	<PageHeader
+		title="Kontak & survei lokasi"
+		intro="Isi form di bawah, atau langsung chat tim marketing kami."
+	/>
 
-	<section class="container-page grid gap-12 py-10 md:py-14 lg:grid-cols-[1fr_1.2fr]">
+	<section class="container-page grid gap-12 pt-8 pb-12 md:pt-10 md:pb-16 lg:grid-cols-[1.2fr_1fr]">
+		<!-- Form first on phones: it is why most people open this page. -->
+		<div id="survei" class="border-line rounded-(--radius-card) border bg-white p-5 md:p-8">
+			<h2 class="text-2xl">Jadwalkan Survei Lokasi</h2>
+			<p class="text-muted mt-1 mb-6">
+				Tim marketing kami akan menghubungi Anda lewat WhatsApp untuk memastikan jadwalnya.
+			</p>
+			<SurveyForm
+				tipe={houses.map((h) => h.data.nama)}
+				selected={Astro.url.searchParams.get("minat")}
+			/>
+		</div>
+
 		<div class="space-y-8">
-			<dl class="space-y-5">
-				<div>
-					<dt class="text-muted flex items-center gap-2 text-sm">
-						<Icon name="whatsapp" class="size-4" />
-						WhatsApp
-					</dt>
-					<dd class="mt-0.5 text-lg font-semibold">{WA_DISPLAY}</dd>
-				</div>
-				{p?.email && (
-					<div>
-						<dt class="text-muted flex items-center gap-2 text-sm">
-							<Icon name="mail" class="size-4" />
-							Email
-						</dt>
-						<dd class="mt-0.5 text-lg font-semibold">
-							<a href={`mailto:${p.email}`} class="hover:underline">
-								{p.email}
-							</a>
-						</dd>
-					</div>
-				)}
-				<div>
-					<dt class="text-muted flex items-center gap-2 text-sm">
-						<Icon name="pin" class="size-4" />
-						Alamat
-					</dt>
-					<dd class="mt-0.5 font-semibold">{p?.alamat || ADDRESS_LINE}</dd>
-				</div>
-			</dl>
+			<ul class="border-line divide-line divide-y overflow-hidden rounded-(--radius-card) border bg-white">
+				{kontak.map((k) => (
+					<li>
+						<a
+							href={k.href}
+							target={k.external ? "_blank" : undefined}
+							rel={k.external ? "noopener" : undefined}
+							data-wa={k.icon === "whatsapp" ? "" : undefined}
+							class="active:bg-sand flex min-h-16 items-center gap-4 px-4 py-3 transition-colors hover:bg-paper"
+						>
+							<Icon name={k.icon} class="text-brand-green size-6 shrink-0" />
+							<span class="flex-1">
+								<span class="text-muted block text-sm">{k.label}</span>
+								<span class="block font-semibold">{k.value}</span>
+							</span>
+							<Icon name="arrow" class="text-muted size-4" />
+						</a>
+					</li>
+				))}
+			</ul>
+
+			<div>
+				<h2 class="text-xl">Alamat</h2>
+				<p class="mt-2">{p?.alamat || ADDRESS_LINE}</p>
+				<MapEmbed mapsUrl={p?.google_maps_url} class="mt-4" />
+			</div>
 
 			{sosmed.length > 0 && (
 				<div>
-					<p class="text-muted text-sm">Ikuti kami</p>
-					<ul class="mt-2 flex flex-wrap gap-2">
+					<h2 class="text-xl">Ikuti kami</h2>
+					<ul class="mt-3 flex flex-wrap gap-2">
 						{sosmed.map(([icon, label, url]) => (
 							<li>
 								<a
 									href={url}
 									target="_blank"
 									rel="noopener"
-									class="border-line inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 font-semibold hover:border-brand-green"
+									class="border-line hover:border-brand-green inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 font-semibold"
 								>
 									<Icon name={icon} class="size-5" />
 									{label}
@@ -86,17 +111,6 @@ const sosmed = (
 					</ul>
 				</div>
 			)}
-
-			<MapEmbed mapsUrl={p?.google_maps_url} />
-		</div>
-
-		<div id="survei" class="border-line rounded-(--radius-card) border bg-white p-5 md:p-8">
-			<h2 class="text-2xl">Jadwalkan Survei Lokasi</h2>
-			<p class="text-muted mt-1 mb-6">
-				Isi form ini, tim marketing kami akan menghubungi Anda lewat WhatsApp untuk memastikan
-				jadwalnya.
-			</p>
-			<SurveyForm tipe={houses.map((h) => h.data.nama)} />
 		</div>
 	</section>
 </Base>

@@ -12,6 +12,8 @@ const { mapsUrl, class: className } = Astro.props;
 const query = encodeURIComponent(`Swarga Boemi Madani Residence, ${ADDRESS_LINE}`);
 const embedSrc = `https://maps.google.com/maps?q=${query}&z=15&output=embed`;
 const openUrl = mapsUrl || `https://www.google.com/maps/search/?api=1&query=${query}`;
+// Opens turn-by-turn navigation in the Maps app on phones.
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
 ---
 
 <div class:list={["space-y-3", className]}>
@@ -31,15 +33,25 @@ const openUrl = mapsUrl || `https://www.google.com/maps/search/?api=1&query=${qu
 			<span>Tampilkan peta</span>
 		</button>
 	</div>
-	<a
-		href={openUrl}
-		target="_blank"
-		rel="noopener"
-		class="text-brand-green inline-flex min-h-11 items-center gap-2 font-semibold hover:underline"
-	>
-		<Icon name="pin" class="size-5" />
-		Buka di Google Maps
-	</a>
+	<div class="flex flex-col gap-2 sm:flex-row">
+		<a
+			href={directionsUrl}
+			target="_blank"
+			rel="noopener"
+			class="bg-brand-green-dark text-paper pressable hover:bg-brand-green inline-flex min-h-12 items-center justify-center gap-2 rounded-(--radius-btn) px-5 font-semibold"
+		>
+			<Icon name="pin" class="size-5" />
+			Petunjuk arah
+		</a>
+		<a
+			href={openUrl}
+			target="_blank"
+			rel="noopener"
+			class="text-brand-green inline-flex min-h-12 items-center justify-center gap-2 px-3 font-semibold hover:underline"
+		>
+			Buka di Google Maps
+		</a>
+	</div>
 </div>
 
 <script>

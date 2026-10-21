@@ -16,6 +16,7 @@ export const ADDRESS = {
 export const ADDRESS_LINE = `${ADDRESS.street}, ${ADDRESS.village}, ${ADDRESS.district}, ${ADDRESS.regency}, ${ADDRESS.province}`;
 
 export const WA_DISPLAY = "0811-2052-225";
+export const WA_TEL = "+628112052225";
 
 // TODO(data): agency name and link for the footer credit (needs client agreement).
 export const AGENCY_CREDIT: { name: string; url?: string } | null = null;
