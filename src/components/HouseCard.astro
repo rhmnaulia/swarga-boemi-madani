@@ -9,11 +9,20 @@ interface Props {
 	slug: string;
 	house: HouseType;
 	priority?: boolean;
+	/** h2 when the cards sit directly under the page h1, h3 under a section heading. */
+	heading?: "h2" | "h3";
 	class?: string;
 	style?: string;
 }
 
-const { slug, house: h, priority = false, class: className, style } = Astro.props;
+const {
+	slug,
+	house: h,
+	priority = false,
+	heading: Heading = "h3",
+	class: className,
+	style,
+} = Astro.props;
 ---
 
 <a
@@ -40,7 +49,7 @@ const { slug, house: h, priority = false, class: className, style } = Astro.prop
 		/>
 	</div>
 	<div class="flex flex-1 flex-col p-5">
-		<h3 class="text-muted text-sm font-semibold tracking-normal">Cluster {h.nama}</h3>
+		<Heading class="text-muted text-sm font-semibold tracking-normal">Cluster {h.nama}</Heading>
 		<p class="text-ink mt-1 text-4xl leading-none font-extrabold tracking-tight tabular-nums">
 			{h.luas_bangunan}
 			<span class="text-sage">/</span>

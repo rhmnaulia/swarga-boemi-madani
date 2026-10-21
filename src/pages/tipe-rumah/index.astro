@@ -8,11 +8,12 @@ import Base from "../../layouts/Base.astro";
 import { getHouseTypes } from "../../lib/cms";
 
 const houses = await getHouseTypes(Astro.cache);
+const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.data.luas_tanah}`);
 ---
 
 <Base
-	title="Tipe Rumah"
-	description="Empat tipe rumah di Swarga Boemi Madani Gombong: Granada 36/84, Cordoba 45/84, Andalusia 60/84, dan Alexandria 80/136. Cek ketersediaan unit."
+	title="Tipe Rumah Dijual di Gombong"
+	description={`Rumah dijual di Swarga Boemi Madani, Gombong, Kebumen: ${daftar.join(", ")}. Lihat denah, spesifikasi, dan cek sisa unit.`}
 >
 	<PageHeader
 		title="Tipe rumah"
@@ -27,7 +28,14 @@ const houses = await getHouseTypes(Astro.cache);
 	<section class="container-page pt-8 pb-12 md:pt-10 md:pb-16">
 		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 			{houses.map((h, i) => (
-				<HouseCard slug={h.id} house={h.data} priority={i < 2} class="reveal" style={`--i: ${i}`} />
+				<HouseCard
+					slug={h.id}
+					house={h.data}
+					heading="h2"
+					priority={i < 2}
+					class="reveal"
+					style={`--i: ${i}`}
+				/>
 			))}
 		</div>
 

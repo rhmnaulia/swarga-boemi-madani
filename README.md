@@ -118,7 +118,7 @@ pnpm wrangler d1 create swarga-boemi-madani          # add database_id to wrangl
 pnpm wrangler r2 bucket create swarga-boemi-madani-media
 pnpm wrangler kv namespace create CACHE              # add id to wrangler.jsonc
 pnpm wrangler secret put EMDASH_ENCRYPTION_KEY
-pnpm deploy
+pnpm deploy                                          # then purge the zone cache, see "SEO & caching"
 pnpm exec emdash doctor                              # checks scheduler wiring
 ```
 
@@ -135,6 +135,27 @@ The SESSION KV binding is added automatically by the Astro Cloudflare adapter.
   plugin plus a verified sender domain in Cloudflare Email Sending. That depends on the final domain, so it is
   set up at go-live. Until then, have each admin register a second passkey (up to 10 per user).
 - No sandboxed/marketplace plugins in phase 1, so no `LOADER` (Dynamic Workers) binding.
+
+## SEO & caching
+
+- Every page gets title, description, canonical, Open Graph and Twitter tags through `Base.astro`. Canonical and
+  sitemap URLs use `EMDASH_SITE_URL` when set, otherwise the request origin, so the domain is never hardcoded.
+- `/sitemap.xml` (`src/pages/sitemap.xml.ts`) lists the code pages plus every house type from the CMS. It replaces
+  EmDash's built-in sitemap, which only lists collections. `/robots.txt` is EmDash's (blocks `/_emdash/`).
+- JSON-LD: `HomeAndConstructionBusiness` on `/` and `/kontak`, `SingleFamilyResidence` + breadcrumb on each house
+  type (`src/lib/seo.ts`). Add `GEO` in `src/content/lokasi.ts` once the coordinates are confirmed.
+- `public/og.png`, `favicon.svg/ico` and `apple-touch-icon.png` are placeholders built from the site colors.
+  TODO(data): replace with the real logo. A house type with `foto_utama` uses that photo as its share image.
+- Pages are cached at Cloudflare's edge (`cache` + `routeRules` in `astro.config.mjs`: 5 min, then
+  stale-while-revalidate 1 h). EmDash purges the affected pages by tag when content is published, including
+  scheduled publishing by the cron, so admin edits still show at once. The editor toolbar runs in `client` mode
+  so cached HTML is the same for everyone.
+- After a code deploy, purge the zone cache (Cloudflare dashboard > Caching > Purge Everything) so no cached page
+  points at old CSS/JS files.
+
+Lighthouse mobile, local production build (`pnpm build && pnpm preview`), Oct 2026, placeholder images:
+Performance 98-100, Accessibility 100, Best Practices 100, SEO 100 on every page; home at 6x CPU slowdown:
+Performance 99. Re-run after real photos are uploaded.
 
 ## Cloudflare free-tier quotas
 

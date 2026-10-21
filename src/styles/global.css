@@ -31,6 +31,8 @@
 
 @layer base {
 	html {
+		/* Shows through between the outgoing and incoming page during a view transition. */
+		background: var(--color-paper);
 		-webkit-text-size-adjust: 100%;
 		-webkit-tap-highlight-color: transparent;
 		scroll-padding-top: 5rem;
@@ -82,7 +84,7 @@
 
 /* One-time entrance for content below the fold. Hidden only when JS is running,
    so content never depends on the script. */
-.js .reveal:not(.is-in) {
+.reveal-pending {
 	opacity: 0;
 	transform: translateY(8px);
 }
@@ -93,24 +95,56 @@
 	transition-delay: calc(var(--i, 0) * 50ms);
 }
 
-/* Page-to-page cross-fade (Chrome, Safari 18.2+; others just navigate). The header stays put. */
+/*
+ * Page-to-page transition (Chrome, Safari 18.2+; others just navigate).
+ * Header, dock and WhatsApp pill are their own layers, so they stay put while the page changes.
+ * The old page fades out fast and the new one rises in after it, so the two never show as a
+ * double image the way a plain cross-fade does.
+ */
 @view-transition {
 	navigation: auto;
 }
 .site-header {
 	view-transition-name: site-header;
 }
-::view-transition-old(root),
+.action-dock {
+	view-transition-name: action-dock;
+}
+.wa-pill {
+	view-transition-name: wa-pill;
+}
+@keyframes page-out {
+	to {
+		opacity: 0;
+	}
+}
+@keyframes page-in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+}
+::view-transition-old(root) {
+	animation: page-out 120ms var(--ease-out) both;
+}
 ::view-transition-new(root) {
-	animation-duration: 180ms;
+	animation: page-in 260ms var(--ease-out) 60ms both;
+}
+::view-transition-group(site-header),
+::view-transition-group(action-dock),
+::view-transition-group(wa-pill) {
+	animation-duration: 200ms;
 	animation-timing-function: var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
-	@view-transition {
-		navigation: none;
+	/* Keep the fade (it softens the cut), drop the movement. */
+	@keyframes page-in {
+		from {
+			opacity: 0;
+		}
 	}
-	.js .reveal:not(.is-in) {
+	.reveal-pending {
 		transform: none;
 	}
 	.reveal {

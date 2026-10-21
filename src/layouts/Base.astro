@@ -8,6 +8,7 @@ import ActionDock from "../components/ActionDock.astro";
 import Tracking from "../components/Tracking.astro";
 import { PROJECT_NAME } from "../content/site";
 import { getPengaturan } from "../lib/cms";
+import { businessLd, ldJson, OG_IMAGE, siteOrigin } from "../lib/seo";
 import type { WaContext } from "../lib/wa";
 import "../styles/global.css";
 
@@ -26,6 +27,10 @@ interface Props {
 	surveyHref?: string | null;
 	/** Hide the dock on pages that are themselves the next step (thank-you). */
 	dock?: boolean;
+	/** Structured data for this page (schema.org objects). */
+	jsonLd?: unknown[];
+	/** Add the business (HomeAndConstructionBusiness) structured data. */
+	business?: boolean;
 }
 
 const {
@@ -38,6 +43,8 @@ const {
 	dockAfterHero,
 	surveyHref,
 	dock = true,
+	jsonLd = [],
+	business = false,
 } = Astro.props;
 const [settingsResult, pengaturan] = await Promise.all([
 	getSiteSettingsWithCacheHint(),
@@ -49,6 +56,11 @@ const settings = settingsResult.data;
 const siteTitle = settings?.title ?? PROJECT_NAME;
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const pageDescription = description ?? settings?.tagline ?? null;
+// Absolute URLs on the public origin; the query string never makes a separate page.
+const origin = siteOrigin(Astro.url);
+const pageCanonical = canonical ?? `${origin}${Astro.url.pathname}`;
+const pageImage = new URL(image ?? OG_IMAGE, origin).href;
+const structured = business ? [businessLd(origin, pengaturan), ...jsonLd] : jsonLd;
 
 const pageCtx = createPublicPageContext({
 	Astro,
@@ -57,8 +69,8 @@ const pageCtx = createPublicPageContext({
 	title: fullTitle,
 	pageTitle: title,
 	description: pageDescription,
-	canonical,
-	image,
+	canonical: pageCanonical,
+	image: pageImage,
 	content,
 	siteName: siteTitle,
 });
@@ -72,33 +84,36 @@ const pageCtx = createPublicPageContext({
 		<meta name="theme-color" content="#faf7f2" />
 		<title>{fullTitle}</title>
 		<script is:inline>
-			// Marks JS as available and reveals `.reveal` blocks once they scroll into view.
-			// Inline so a failed script download can never leave content hidden.
+			// Fades `.reveal` blocks in as they scroll into view. Only blocks below the fold are ever
+			// hidden: what is on screen at load shows at once, so it does not appear a second time
+			// after the page transition. Inline so a failed script download never hides content.
 			document.documentElement.classList.add("js");
 			document.addEventListener("DOMContentLoaded", function () {
-				var items = document.querySelectorAll(".reveal");
-				if (!("IntersectionObserver" in window)) {
-					items.forEach(function (el) {
-						el.classList.add("is-in");
-					});
-					return;
-				}
+				if (!("IntersectionObserver" in window)) return;
 				var io = new IntersectionObserver(
 					function (entries) {
 						entries.forEach(function (e) {
 							if (e.isIntersecting) {
-								e.target.classList.add("is-in");
+								e.target.classList.remove("reveal-pending");
 								io.unobserve(e.target);
 							}
 						});
 					},
 					{ rootMargin: "0px 0px -40px 0px" },
 				);
-				items.forEach(function (el) {
+				document.querySelectorAll(".reveal").forEach(function (el) {
+					if (el.getBoundingClientRect().top < window.innerHeight) return;
+					el.classList.add("reveal-pending");
 					io.observe(el);
 				});
 			});
 		</script>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		{structured.map((data) => (
+			<script type="application/ld+json" set:html={ldJson(data)} />
+		))}
 		<Tracking />
 		<slot name="head" />
 		<EmDashHead page={pageCtx} />

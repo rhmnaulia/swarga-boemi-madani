@@ -8,6 +8,7 @@ import { BEBAS_BIAYA } from "../../content/keunggulan";
 import Base from "../../layouts/Base.astro";
 import { getHouseType, getHouseTypes } from "../../lib/cms";
 import { hargaLabel, lantaiLabel } from "../../lib/format";
+import { houseLd, siteOrigin } from "../../lib/seo";
 import type { WaContext } from "../../lib/wa";
 
 const { slug } = Astro.params;
@@ -29,6 +30,19 @@ const photos = [d.foto_utama, ...(d.galeri ?? []).map((g) => g.foto)].filter(
 const habis = d.ketersediaan === "habis";
 const surveyHref = `/kontak?minat=${encodeURIComponent(`Rumah tipe ${d.nama}`)}#survei`;
 
+const description = `Rumah tipe ${d.nama} ${tipe} di Swarga Boemi Madani, Gombong: ${d.kamar_tidur} kamar tidur, ${d.kamar_mandi} kamar mandi, ${lantaiLabel(d.lantai)}, listrik ${d.listrik}. Lihat denah, spesifikasi, dan sisa unit.`;
+const origin = siteOrigin(Astro.url);
+const image = d.foto_utama?.src ? new URL(d.foto_utama.src, origin).href : undefined;
+const jsonLd = houseLd(origin, {
+	nama: d.nama,
+	slug: house.id,
+	description,
+	image,
+	luasBangunan: d.luas_bangunan,
+	kamarTidur: d.kamar_tidur,
+	kamarMandi: d.kamar_mandi,
+});
+
 const facts = [
 	{ icon: "area", label: "Luas bangunan", value: `${d.luas_bangunan} m²` },
 	{ icon: "area", label: "Luas tanah", value: `${d.luas_tanah} m²` },
@@ -41,7 +55,9 @@ const facts = [
 
 <Base
 	title={`Rumah Tipe ${d.nama} ${tipe}`}
-	description={`Rumah tipe ${d.nama} ${tipe} di Swarga Boemi Madani, Gombong: ${d.kamar_tidur} kamar tidur, ${d.kamar_mandi} kamar mandi, ${d.lantai} lantai, listrik ${d.listrik}. Lihat denah, spesifikasi, dan sisa unit.`}
+	{description}
+	{image}
+	{jsonLd}
 	content={{ collection: "house_type", id: d.id, slug: house.id }}
 	wa={wa}
 	{surveyHref}
