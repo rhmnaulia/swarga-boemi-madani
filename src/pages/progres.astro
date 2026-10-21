@@ -1,0 +1,81 @@
+---
+import Media from "../components/Media.astro";
+import PageHeader from "../components/PageHeader.astro";
+import WaButton from "../components/WaButton.astro";
+import { QC_STEPS } from "../content/keunggulan";
+import Base from "../layouts/Base.astro";
+import { getProgress } from "../lib/cms";
+import { formatTanggal } from "../lib/format";
+
+const updates = await getProgress(Astro.cache);
+---
+
+<Base
+	title="Progres Pembangunan"
+	description="Update progres pembangunan dan proses pengecekan kualitas (QC) di Swarga Boemi Madani Residence, Gombong."
+>
+	<PageHeader
+		title="Progres pembangunan"
+		intro="Foto dan catatan langsung dari lapangan, termasuk setiap tahap pengecekan kualitas."
+	/>
+
+	<section class="container-page grid gap-10 py-10 md:py-14 lg:grid-cols-[1fr_2fr]">
+		<aside class="lg:sticky lg:top-24 lg:self-start">
+			<h2 class="text-xl">Cara kami menjaga kualitas</h2>
+			<ol class="mt-4 space-y-4">
+				{QC_STEPS.map((s, i) => (
+					<li class="flex gap-3">
+						<span class="bg-brand-green grid size-8 shrink-0 place-items-center rounded-full text-sm font-bold text-white">
+							{i + 1}
+						</span>
+						<div>
+							<p class="font-semibold">{s.title}</p>
+							<p class="text-muted text-sm">{s.text}</p>
+						</div>
+					</li>
+				))}
+			</ol>
+		</aside>
+
+		<div>
+			{updates.length === 0 ? (
+				<div class="border-line rounded-(--radius-card) border border-dashed bg-white p-8 text-center">
+					<p class="font-semibold">Update progres segera dibagikan di sini.</p>
+					<p class="text-muted mt-1">
+						Ingin melihat kondisi terbaru sekarang? Tanyakan ke tim marketing kami.
+					</p>
+					<div class="mt-5">
+						<WaButton />
+					</div>
+				</div>
+			) : (
+				<ol class="border-line space-y-10 border-l pl-6">
+					{updates.map((u) => (
+						<li class="reveal relative">
+							<span class="bg-brand-green absolute top-1.5 -left-[1.95rem] size-3 rounded-full ring-4 ring-(--color-paper)" />
+							<time class="text-muted text-sm" datetime={new Date(u.data.tanggal).toISOString()}>
+								{formatTanggal(u.data.tanggal)}
+							</time>
+							<h2 class="mt-1 text-xl">{u.data.judul}</h2>
+							{u.data.caption && <p class="text-muted mt-1 max-w-2xl">{u.data.caption}</p>}
+							{u.data.foto && u.data.foto.length > 0 && (
+								<ul class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+									{u.data.foto.map((f, i) => (
+										<li>
+											<Media
+												image={f.foto}
+												alt={`${u.data.judul}, foto ${i + 1}`}
+												ratio="1/1"
+												sizes="(min-width: 48rem) 20vw, 50vw"
+											/>
+										</li>
+									))}
+								</ul>
+							)}
+						</li>
+					))}
+				</ol>
+			)}
+		</div>
+	</section>
+</Base>

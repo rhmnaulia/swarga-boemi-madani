@@ -1,0 +1,125 @@
+---
+import type { Pengaturan } from "../../emdash-env";
+import {
+	ADDRESS_LINE,
+	AGENCY_CREDIT,
+	COMPANY,
+	NAV,
+	PROJECT_NAME,
+	WA_DISPLAY,
+} from "../content/site";
+import { buildWaLink } from "../lib/wa";
+import Hills from "./Hills.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "./icons";
+
+interface Props {
+	pengaturan: Pengaturan | null;
+}
+
+const { pengaturan: p } = Astro.props;
+
+const sosmed = (
+	[
+		["instagram", "Instagram", p?.instagram],
+		["tiktok", "TikTok", p?.tiktok],
+		["facebook", "Facebook", p?.facebook],
+		["youtube", "YouTube", p?.youtube],
+	] as [IconName, string, string | undefined][]
+).filter(([, , url]) => url);
+---
+
+<Hills
+	color="var(--color-brand-green-dark)"
+	back="var(--color-sage)"
+	class="-mb-px h-10 md:h-16"
+	flip
+/>
+<footer class="bg-brand-green-dark pb-24 text-white/85 lg:pb-0">
+	<div class="container-page grid gap-10 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
+		<div class="space-y-3">
+			<p class="text-lg font-bold text-white">{PROJECT_NAME}</p>
+			<p class="text-sm">{ADDRESS_LINE}</p>
+			<p class="text-sm">
+				Dikembangkan oleh {COMPANY}. Anggota REI, NPA 02-01085. NIB 1406220004905.
+			</p>
+		</div>
+
+		<div>
+			<p class="mb-3 text-sm font-semibold text-white">Hubungi kami</p>
+			<ul class="space-y-1 text-sm">
+				<li>
+					<a
+						href={buildWaLink({ kind: "umum" }, p?.whatsapp)}
+						target="_blank"
+						rel="noopener"
+						data-wa
+						class="inline-flex min-h-11 items-center gap-2 hover:text-white"
+					>
+						<Icon name="whatsapp" class="size-4" />
+						WhatsApp {WA_DISPLAY}
+					</a>
+				</li>
+				{p?.email && (
+					<li>
+						<a
+							href={`mailto:${p.email}`}
+							class="inline-flex min-h-11 items-center gap-2 hover:text-white"
+						>
+							<Icon name="mail" class="size-4" />
+							{p.email}
+						</a>
+					</li>
+				)}
+			</ul>
+			{sosmed.length > 0 && (
+				<ul class="mt-3 flex gap-1">
+					{sosmed.map(([icon, label, url]) => (
+						<li>
+							<a
+								href={url}
+								target="_blank"
+								rel="noopener"
+								class="grid size-11 place-items-center rounded-lg hover:bg-white/10 hover:text-white"
+							>
+								<Icon name={icon} class="size-5" label={label} />
+							</a>
+						</li>
+					))}
+				</ul>
+			)}
+		</div>
+
+		<nav aria-label="Menu footer">
+			<p class="mb-3 text-sm font-semibold text-white">Halaman</p>
+			<ul class="grid grid-cols-2 gap-x-4 text-sm md:grid-cols-1">
+				{NAV.map((item) => (
+					<li>
+						<a href={item.href} class="inline-flex min-h-10 items-center hover:text-white">
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	</div>
+	<div class="border-t border-white/15">
+		<div class="container-page flex flex-col gap-1 py-5 text-xs text-white/70 sm:flex-row sm:justify-between">
+			<p>
+				© {new Date().getFullYear()} {COMPANY}
+			</p>
+			{AGENCY_CREDIT && (
+				<p>
+					Website oleh{" "}
+					{AGENCY_CREDIT.url ? (
+						<a href={AGENCY_CREDIT.url} class="underline hover:text-white">
+							{AGENCY_CREDIT.name}
+						</a>
+					) : (
+						AGENCY_CREDIT.name
+					)}
+				</p>
+			)}
+		</div>
+	</div>
+</footer>

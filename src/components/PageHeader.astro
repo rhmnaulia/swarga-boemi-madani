@@ -1,0 +1,21 @@
+---
+import Hills from "./Hills.astro";
+
+interface Props {
+	title: string;
+	intro?: string;
+}
+
+const { title, intro } = Astro.props;
+---
+
+<section class="bg-brand-green-soft">
+	<div class="container-page pt-10 pb-6 md:pt-14">
+		<h1 class="text-brand-green-dark max-w-3xl text-[2.25rem] leading-[1.06] md:text-5xl">
+			{title}
+		</h1>
+		{intro && <p class="text-muted mt-3 max-w-2xl text-lg">{intro}</p>}
+		<slot />
+	</div>
+	<Hills color="var(--color-paper)" back="var(--color-sage)" class="h-8 md:h-12" />
+</section>

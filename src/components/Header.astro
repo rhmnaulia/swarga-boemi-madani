@@ -1,0 +1,189 @@
+---
+import { NAV, SHORT_NAME } from "../content/site";
+import Icon from "./Icon.astro";
+import WaButton from "./WaButton.astro";
+
+interface Props {
+	logo?: { url?: string; alt?: string } | null;
+}
+
+const { logo } = Astro.props;
+const path = Astro.url.pathname;
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+---
+
+<header class="site-header border-line sticky top-0 z-40 border-b">
+	<div class="container-page flex h-16 items-center justify-between gap-4">
+		<a
+			href="/"
+			class="flex min-h-11 shrink-0 items-center gap-2 font-bold tracking-tight whitespace-nowrap"
+		>
+			{logo?.url ? (
+				<img src={logo.url} alt={logo.alt || SHORT_NAME} class="h-9 w-auto" />
+			) : (
+				// TODO(data): logo file. Admin can upload it in EmDash Settings > General.
+				<>
+					<span class="bg-brand-green-dark text-paper grid size-9 place-items-center rounded-[4px]">
+						<Icon name="home" class="size-5" />
+					</span>
+					<span class="leading-tight">{SHORT_NAME}</span>
+				</>
+			)}
+		</a>
+
+		<nav aria-label="Menu utama" class="hidden xl:block">
+			<ul class="flex items-center gap-1 text-[0.92rem] font-medium">
+				{NAV.map((item) => (
+					<li>
+						<a
+							href={item.href}
+							aria-current={isActive(item.href) ? "page" : undefined}
+							class="hover:text-brand-green aria-[current=page]:text-brand-green rounded-md px-2.5 py-2 whitespace-nowrap transition-colors"
+						>
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+
+		<div class="hidden shrink-0 xl:block">
+			<WaButton label="Chat Marketing" class="min-h-10 px-4 text-sm whitespace-nowrap" />
+		</div>
+
+		<button
+			type="button"
+			class="pressable -mr-2 grid size-11 place-items-center rounded-lg xl:hidden"
+			aria-label="Buka menu"
+			aria-haspopup="dialog"
+			data-nav-open
+		>
+			<Icon name="menu" class="size-6" />
+		</button>
+	</div>
+</header>
+
+<dialog class="nav-sheet bg-paper" aria-label="Menu" data-nav>
+	<div class="flex h-full flex-col">
+		<div class="border-line flex h-16 items-center justify-between border-b px-4">
+			<span class="font-bold">Menu</span>
+			<button
+				type="button"
+				class="pressable -mr-2 grid size-11 place-items-center rounded-lg"
+				aria-label="Tutup menu"
+				data-nav-close
+			>
+				<Icon name="close" class="size-6" />
+			</button>
+		</div>
+		<nav aria-label="Menu utama" class="flex-1 overflow-y-auto px-2 py-3">
+			<ul>
+				<li>
+					<a href="/" class="flex min-h-12 items-center rounded-lg px-3 text-lg font-semibold">
+						Beranda
+					</a>
+				</li>
+				{NAV.map((item) => (
+					<li>
+						<a
+							href={item.href}
+							aria-current={isActive(item.href) ? "page" : undefined}
+							class="aria-[current=page]:text-brand-green flex min-h-12 items-center rounded-lg px-3 text-lg font-semibold"
+						>
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+		<div class="border-line border-t p-4">
+			<WaButton label="Chat via WhatsApp" class="w-full" />
+		</div>
+	</div>
+</dialog>
+
+<style>
+	.site-header {
+		background: color-mix(in srgb, var(--color-paper) 88%, transparent);
+		backdrop-filter: blur(16px) saturate(160%);
+		-webkit-backdrop-filter: blur(16px) saturate(160%);
+	}
+	@media (prefers-reduced-transparency: reduce) {
+		.site-header {
+			background: var(--color-paper);
+			backdrop-filter: none;
+		}
+	}
+
+	/* Side sheet: enters and leaves along the same path, from the right edge. */
+	.nav-sheet {
+		margin: 0 0 0 auto;
+		width: min(20rem, 86vw);
+		height: 100dvh;
+		max-height: none;
+		max-width: none;
+		padding: 0;
+		border: 0;
+		transform: translateX(100%);
+		transition:
+			transform 240ms var(--ease-drawer),
+			display 240ms allow-discrete,
+			overlay 240ms allow-discrete;
+	}
+	.nav-sheet[open] {
+		transform: none;
+	}
+	@starting-style {
+		.nav-sheet[open] {
+			transform: translateX(100%);
+		}
+	}
+	.nav-sheet::backdrop {
+		background: rgb(16 24 18 / 0.4);
+		opacity: 0;
+		transition:
+			opacity 240ms ease,
+			display 240ms allow-discrete,
+			overlay 240ms allow-discrete;
+	}
+	.nav-sheet[open]::backdrop {
+		opacity: 1;
+	}
+	@starting-style {
+		.nav-sheet[open]::backdrop {
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.nav-sheet {
+			transform: none;
+			opacity: 0;
+			transition:
+				opacity 200ms ease,
+				display 200ms allow-discrete,
+				overlay 200ms allow-discrete;
+		}
+		.nav-sheet[open] {
+			opacity: 1;
+		}
+		@starting-style {
+			.nav-sheet[open] {
+				opacity: 0;
+			}
+		}
+	}
+</style>
+
+<script>
+	const sheet = document.querySelector<HTMLDialogElement>("[data-nav]");
+	const opener = document.querySelector<HTMLButtonElement>("[data-nav-open]");
+	if (sheet && opener) {
+		opener.addEventListener("click", () => sheet.showModal());
+		sheet.querySelector("[data-nav-close]")?.addEventListener("click", () => sheet.close());
+		// Tap on the backdrop closes the sheet.
+		sheet.addEventListener("click", (e) => {
+			if (e.target === sheet) sheet.close();
+		});
+		sheet.addEventListener("close", () => opener.focus());
+	}
+</script>

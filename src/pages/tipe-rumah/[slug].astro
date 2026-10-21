@@ -1,18 +1,182 @@
 ---
+import Gallery from "../../components/Gallery.astro";
+import Icon from "../../components/Icon.astro";
+import Media from "../../components/Media.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
+import WaButton from "../../components/WaButton.astro";
+import { BEBAS_BIAYA } from "../../content/keunggulan";
 import Base from "../../layouts/Base.astro";
-import { getHouseType } from "../../lib/cms";
+import { getHouseType, getHouseTypes } from "../../lib/cms";
+import { hargaLabel, lantaiLabel } from "../../lib/format";
+import type { WaContext } from "../../lib/wa";
 
 const { slug } = Astro.params;
 const house = slug ? await getHouseType(slug, Astro.cache) : null;
 if (!house) return Astro.rewrite("/404");
+
 const d = house.data;
+const others = (await getHouseTypes(Astro.cache)).filter((h) => h.id !== house.id);
+const tipe = `${d.luas_bangunan}/${d.luas_tanah}`;
+const wa: WaContext = {
+	kind: "tipe",
+	nama: d.nama,
+	luasBangunan: d.luas_bangunan,
+	luasTanah: d.luas_tanah,
+};
+const photos = [d.foto_utama, ...(d.galeri ?? []).map((g) => g.foto)].filter(
+	(p): p is NonNullable<typeof p> => Boolean(p),
+);
+const habis = d.ketersediaan === "habis";
+
+const facts = [
+	{ icon: "area", label: "Luas bangunan", value: `${d.luas_bangunan} m²` },
+	{ icon: "area", label: "Luas tanah", value: `${d.luas_tanah} m²` },
+	{ icon: "stairs", label: "Lantai", value: lantaiLabel(d.lantai) },
+	{ icon: "bed", label: "Kamar tidur", value: d.kamar_tidur },
+	{ icon: "bath", label: "Kamar mandi", value: d.kamar_mandi },
+	{ icon: "bolt", label: "Listrik", value: d.listrik },
+] as const;
 ---
 
-<Base title={`Rumah Tipe ${d.nama} ${d.luas_bangunan}/${d.luas_tanah}`}>
-	<h1>Tipe {d.nama}</h1>
-	<p>
-		LB/LT {d.luas_bangunan}/{d.luas_tanah} m², {d.lantai} lantai
-	</p>
-	<p data-testid="ketersediaan">Status: {d.ketersediaan}</p>
-	<p>{d.label_harga || "Hubungi kami untuk harga"}</p>
+<Base
+	title={`Rumah Tipe ${d.nama} ${tipe}`}
+	description={`Rumah tipe ${d.nama} ${tipe} di Swarga Boemi Madani, Gombong: ${d.kamar_tidur} kamar tidur, ${d.kamar_mandi} kamar mandi, ${d.lantai} lantai, listrik ${d.listrik}. Lihat denah, spesifikasi, dan sisa unit.`}
+	content={{ collection: "house_type", id: d.id, slug: house.id }}
+	wa={wa}
+>
+	<div class="container-page pt-5">
+		<a
+			href="/tipe-rumah"
+			class="text-muted inline-flex min-h-11 items-center gap-1 text-sm hover:text-ink"
+		>
+			<Icon name="arrow" class="size-4 rotate-180" />
+			Semua tipe rumah
+		</a>
+	</div>
+
+	<section class="container-page grid gap-8 pt-2 pb-12 lg:grid-cols-[1.3fr_1fr] lg:gap-12">
+		<div class="min-w-0">
+			<Gallery images={photos} alt={`Rumah tipe ${d.nama} ${tipe}`} />
+		</div>
+
+		<div>
+			<div class="flex flex-wrap items-center gap-3">
+				<h1 class="text-3xl leading-tight md:text-4xl" {...house.edit.nama}>
+					Tipe {d.nama}
+				</h1>
+				<StatusBadge status={d.ketersediaan} sisaUnit={d.sisa_unit} />
+			</div>
+			<p class="mt-2 text-5xl leading-none font-extrabold tracking-tight tabular-nums">
+				{d.luas_bangunan}
+				<span class="text-sage">/</span>
+				<span class="text-muted text-3xl">{d.luas_tanah}</span>
+			</p>
+			<p class="text-muted mt-1 text-xs">luas bangunan / tanah (m²)</p>
+
+			<p class="border-line mt-5 border-t pt-5 text-2xl font-extrabold">{hargaLabel(d)}</p>
+
+			<dl class="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3">
+				{facts.map((f) => (
+					<div>
+						<dt class="text-muted flex items-center gap-1.5 text-sm">
+							<Icon name={f.icon} class="size-4" />
+							{f.label}
+						</dt>
+						<dd class="mt-0.5 font-semibold">{f.value}</dd>
+					</div>
+				))}
+			</dl>
+
+			<div class="mt-7 flex flex-col gap-3">
+				<WaButton ctx={wa} label={habis ? "Tanya unit serupa via WhatsApp" : undefined} />
+				<a
+					href="/kontak#survei"
+					class="border-line pressable inline-flex min-h-12 items-center justify-center rounded-(--radius-btn) border bg-white px-5 font-semibold hover:border-brand-green"
+				>
+					Jadwalkan Survei Lokasi
+				</a>
+			</div>
+
+			<p class="bg-brand-green-soft text-brand-green-dark mt-5 flex items-start gap-3 rounded-(--radius-card) p-4 text-sm font-semibold">
+				<Icon name="doc" class="mt-0.5 size-5 shrink-0" />
+				{BEBAS_BIAYA}
+			</p>
+		</div>
+	</section>
+
+	<section class="border-line border-t py-12">
+		<div class="container-page grid gap-10 lg:grid-cols-2">
+			<div>
+				<h2 class="text-2xl">Denah</h2>
+				<Media
+					image={d.denah}
+					alt={`Denah rumah tipe ${d.nama} ${tipe}`}
+					ratio="3/4"
+					placeholder="Denah menyusul"
+					sizes="(min-width: 64rem) 36rem, 100vw"
+					class="border-line mt-4 border bg-white"
+				/>
+			</div>
+
+			<div class="space-y-10">
+				{d.fitur && d.fitur.length > 0 && (
+					<div>
+						<h2 class="text-2xl">Fitur & bonus</h2>
+						<ul class="mt-4 space-y-2">
+							{d.fitur.map((f) => (
+								<li class="flex items-center gap-2.5">
+									<Icon name="check" class="text-brand-green size-5 shrink-0" />
+									{f.teks}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+
+				{d.spesifikasi && d.spesifikasi.length > 0 && (
+					<div>
+						<h2 class="text-2xl">Spesifikasi</h2>
+						<table class="border-line mt-4 w-full overflow-hidden rounded-(--radius-card) border bg-white text-sm">
+							<tbody class="divide-y divide-(--color-line)">
+								{d.spesifikasi.map((s) => (
+									<tr>
+										<th scope="row" class="text-muted w-2/5 px-4 py-3 text-left font-medium">
+											{s.item}
+										</th>
+										<td class="px-4 py-3 font-semibold">{s.keterangan}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				)}
+			</div>
+		</div>
+	</section>
+
+	{others.length > 0 && (
+		<section class="bg-sand py-12">
+			<div class="container-page">
+				<h2 class="text-2xl">Tipe lainnya</h2>
+				<ul class="mt-5 grid gap-3 sm:grid-cols-3">
+					{others.map((o) => (
+						<li>
+							<a
+								href={`/tipe-rumah/${o.id}`}
+								class="border-line flex min-h-16 items-center justify-between gap-3 rounded-(--radius-card) border bg-white px-4 py-3 hover:border-brand-green"
+							>
+								<span>
+									<span class="block font-semibold">{o.data.nama}</span>
+									<span class="text-muted text-sm">
+										{o.data.luas_bangunan}/{o.data.luas_tanah}
+									</span>
+								</span>
+								<StatusBadge status={o.data.ketersediaan} sisaUnit={o.data.sisa_unit} />
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	)}
 </Base>

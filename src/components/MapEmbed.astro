@@ -1,0 +1,57 @@
+---
+import { ADDRESS_LINE } from "../content/site";
+import Icon from "./Icon.astro";
+
+interface Props {
+	/** pengaturan.google_maps_url: the share link admins copy from Google Maps. */
+	mapsUrl?: string | null;
+	class?: string;
+}
+
+const { mapsUrl, class: className } = Astro.props;
+const query = encodeURIComponent(`Swarga Boemi Madani Residence, ${ADDRESS_LINE}`);
+const embedSrc = `https://maps.google.com/maps?q=${query}&z=15&output=embed`;
+const openUrl = mapsUrl || `https://www.google.com/maps/search/?api=1&query=${query}`;
+---
+
+<div class:list={["space-y-3", className]}>
+	<div
+		class="bg-brand-green-soft relative overflow-hidden rounded-(--radius-card)"
+		style="aspect-ratio: 4/3"
+		data-map
+		data-src={embedSrc}
+	>
+		<!-- Facade: Google's iframe weighs ~1 MB, so it only loads on request. -->
+		<button
+			type="button"
+			class="text-brand-green-dark absolute inset-0 flex flex-col items-center justify-center gap-2 font-semibold"
+			data-map-load
+		>
+			<Icon name="pin" class="size-9" />
+			<span>Tampilkan peta</span>
+		</button>
+	</div>
+	<a
+		href={openUrl}
+		target="_blank"
+		rel="noopener"
+		class="text-brand-green inline-flex min-h-11 items-center gap-2 font-semibold hover:underline"
+	>
+		<Icon name="pin" class="size-5" />
+		Buka di Google Maps
+	</a>
+</div>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-map]").forEach((box) => {
+		box.querySelector("[data-map-load]")?.addEventListener("click", () => {
+			const frame = document.createElement("iframe");
+			frame.src = box.dataset.src!;
+			frame.title = "Peta lokasi Swarga Boemi Madani Residence";
+			frame.loading = "lazy";
+			frame.referrerPolicy = "no-referrer-when-downgrade";
+			frame.className = "absolute inset-0 size-full border-0";
+			box.replaceChildren(frame);
+		});
+	});
+</script>

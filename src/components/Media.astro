@@ -1,0 +1,62 @@
+---
+import { Image } from "emdash/ui";
+import Hills from "./Hills.astro";
+
+type ImageValue = { id: string; src?: string; alt?: string; width?: number; height?: number };
+
+interface Props {
+	image?: ImageValue | null;
+	/** Alt text; required so every photo is described even when the CMS alt is empty. */
+	alt: string;
+	ratio?: "4/3" | "3/2" | "16/9" | "1/1" | "3/4" | "4/5";
+	sizes?: string;
+	priority?: boolean;
+	/** Text on the placeholder while the real photo is missing. */
+	placeholder?: string;
+	class?: string;
+}
+
+const {
+	image,
+	alt,
+	ratio = "4/3",
+	sizes = "(min-width: 64rem) 50vw, 100vw",
+	priority = false,
+	placeholder = "Foto menyusul",
+	class: className,
+} = Astro.props;
+---
+
+<div
+	class:list={[
+		"bg-sand relative aspect-(--ratio) overflow-hidden rounded-(--radius-card)",
+		className,
+	]}
+	style={`--ratio: ${ratio}`}
+>
+	{image ? (
+		<Image
+			image={image}
+			alt={image.alt || alt}
+			sizes={sizes}
+			priority={priority}
+			class="absolute inset-0 size-full object-cover"
+		/>
+	) : (
+		// TODO(data): real photo. Placeholder keeps the final aspect ratio so layout does not shift.
+		<div
+			class="absolute inset-0 bg-linear-to-b from-[#f3ecdf] to-[#e9e0cf]"
+			role="img"
+			aria-label={`${alt} (foto menyusul)`}
+		>
+			<span class="text-muted absolute inset-x-0 top-[38%] text-center text-sm font-medium">
+				{placeholder}
+			</span>
+			<Hills
+				color="var(--color-sage)"
+				back="#d3dfcc"
+				class="absolute inset-x-0 bottom-0 h-1/3 max-h-28"
+			/>
+		</div>
+	)}
+</div>

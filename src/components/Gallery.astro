@@ -1,0 +1,127 @@
+---
+import { Image } from "emdash/ui";
+import Icon from "./Icon.astro";
+import Media from "./Media.astro";
+
+type ImageValue = { id: string; src?: string; alt?: string; width?: number; height?: number };
+
+interface Props {
+	images: ImageValue[];
+	/** Base description used when a photo has no alt text. */
+	alt: string;
+}
+
+const { images, alt } = Astro.props;
+const altFor = (img: ImageValue, i: number) => img.alt || `${alt}, foto ${i + 1}`;
+---
+
+{images.length === 0 ? (
+	<Media alt={alt} ratio="4/3" priority />
+) : (
+	<div data-gallery>
+		<ul class="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 md:mx-0 md:px-0">
+			{images.map((img, i) => (
+				<li class="w-[88%] shrink-0 snap-center md:w-[calc(50%-0.375rem)]">
+					<button
+						type="button"
+						class="pressable block w-full"
+						data-gallery-open={i}
+						aria-label={`Perbesar ${altFor(img, i)}`}
+					>
+						<Media
+							image={img}
+							alt={altFor(img, i)}
+							ratio="4/3"
+							priority={i === 0}
+							sizes="(min-width: 48rem) 36rem, 88vw"
+						/>
+					</button>
+				</li>
+			))}
+		</ul>
+		{images.length > 1 && (
+			<p class="text-muted mt-2 text-sm">{images.length} foto. Geser untuk melihat.</p>
+		)}
+
+		<dialog class="lightbox" aria-label="Galeri foto" data-gallery-dialog>
+			<button
+				type="button"
+				class="absolute top-3 right-3 z-10 grid size-11 place-items-center rounded-full bg-black/60 text-white"
+				aria-label="Tutup galeri"
+				data-gallery-close
+			>
+				<Icon name="close" class="size-6" />
+			</button>
+			<ul class="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto" data-gallery-track>
+				{images.map((img, i) => (
+					<li class="grid h-full w-full shrink-0 snap-center place-items-center p-2">
+						<Image
+							image={img}
+							alt={altFor(img, i)}
+							sizes="100vw"
+							class="max-h-full w-auto max-w-full object-contain"
+						/>
+					</li>
+				))}
+			</ul>
+		</dialog>
+	</div>
+)}
+
+<style>
+	.no-scrollbar {
+		scrollbar-width: none;
+	}
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	.lightbox {
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+		background: rgb(10 12 10 / 0.95);
+		opacity: 0;
+		transform: scale(0.96);
+		transition:
+			opacity 200ms var(--ease-out),
+			transform 200ms var(--ease-out),
+			display 200ms allow-discrete,
+			overlay 200ms allow-discrete;
+	}
+	.lightbox[open] {
+		opacity: 1;
+		transform: none;
+	}
+	@starting-style {
+		.lightbox[open] {
+			opacity: 0;
+			transform: scale(0.96);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.lightbox,
+		.lightbox[open] {
+			transform: none;
+		}
+	}
+</style>
+
+<script>
+	document.querySelectorAll<HTMLElement>("[data-gallery]").forEach((root) => {
+		const dialog = root.querySelector<HTMLDialogElement>("[data-gallery-dialog]");
+		const track = root.querySelector<HTMLElement>("[data-gallery-track]");
+		if (!dialog || !track) return;
+		root.querySelectorAll<HTMLElement>("[data-gallery-open]").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				dialog.showModal();
+				const i = Number(btn.dataset.galleryOpen);
+				track.scrollTo({ left: i * track.clientWidth, behavior: "instant" });
+			});
+		});
+		dialog.querySelector("[data-gallery-close]")?.addEventListener("click", () => dialog.close());
+	});
+</script>

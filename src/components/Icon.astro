@@ -1,0 +1,36 @@
+---
+import { BRAND_ICONS, LINE_ICONS, type IconName } from "./icons";
+
+interface Props {
+	name: IconName;
+	class?: string;
+	/** Accessible label. Omit for decorative icons next to visible text. */
+	label?: string;
+}
+
+const { name, class: className = "size-5", label } = Astro.props;
+const brand = name in BRAND_ICONS ? BRAND_ICONS[name as keyof typeof BRAND_ICONS] : null;
+const line = brand ? null : LINE_ICONS[name as keyof typeof LINE_ICONS];
+---
+
+<svg
+	viewBox="0 0 24 24"
+	class={className}
+	role={label ? "img" : undefined}
+	aria-label={label}
+	aria-hidden={label ? undefined : "true"}
+	focusable="false"
+>
+	{brand ? (
+		<path d={brand} fill="currentColor" />
+	) : (
+		<path
+			d={line}
+			fill="none"
+			stroke="currentColor"
+			stroke-width="1.75"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		/>
+	)}
+</svg>

@@ -2,6 +2,12 @@
 import { getSiteSettingsWithCacheHint } from "emdash";
 import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import WaFloat from "../components/WaFloat.astro";
+import { PROJECT_NAME } from "../content/site";
+import { getPengaturan } from "../lib/cms";
+import type { WaContext } from "../lib/wa";
 import "../styles/global.css";
 
 interface Props {
@@ -11,15 +17,23 @@ interface Props {
 	canonical?: string | null;
 	/** Pass content reference for plugin page contributions on content pages */
 	content?: { collection: string; id: string; slug?: string | null };
+	/** Message context for the floating WhatsApp button. */
+	wa?: WaContext;
+	/** Page has a `[data-hero]` with its own WhatsApp CTA; float appears after it. */
+	floatAfterHero?: boolean;
 }
 
-const { title, description, image, canonical, content } = Astro.props;
-const settingsResult = await getSiteSettingsWithCacheHint();
+const { title, description, image, canonical, content, wa, floatAfterHero } = Astro.props;
+const [settingsResult, pengaturan] = await Promise.all([
+	getSiteSettingsWithCacheHint(),
+	getPengaturan(Astro.cache),
+]);
 if (Astro.cache?.enabled) Astro.cache.set(settingsResult.cacheHint);
 
-const siteTitle = settingsResult.data?.title ?? "Swarga Boemi Madani Residence";
+const settings = settingsResult.data;
+const siteTitle = settings?.title ?? PROJECT_NAME;
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
-const pageDescription = description ?? settingsResult.data?.tagline ?? null;
+const pageDescription = description ?? settings?.tagline ?? null;
 
 const pageCtx = createPublicPageContext({
 	Astro,
@@ -40,14 +54,58 @@ const pageCtx = createPublicPageContext({
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#faf7f2" />
 		<title>{fullTitle}</title>
+		<script is:inline>
+			// Marks JS as available and reveals `.reveal` blocks once they scroll into view.
+			// Inline so a failed script download can never leave content hidden.
+			document.documentElement.classList.add("js");
+			document.addEventListener("DOMContentLoaded", function () {
+				var items = document.querySelectorAll(".reveal");
+				if (!("IntersectionObserver" in window)) {
+					items.forEach(function (el) {
+						el.classList.add("is-in");
+					});
+					return;
+				}
+				var io = new IntersectionObserver(
+					function (entries) {
+						entries.forEach(function (e) {
+							if (e.isIntersecting) {
+								e.target.classList.add("is-in");
+								io.unobserve(e.target);
+							}
+						});
+					},
+					{ rootMargin: "0px 0px -40px 0px" },
+				);
+				items.forEach(function (el) {
+					io.observe(el);
+				});
+			});
+		</script>
+		<slot name="head" />
 		<EmDashHead page={pageCtx} />
 	</head>
-	<body>
+	<body class="flex min-h-dvh flex-col">
 		<EmDashBodyStart page={pageCtx} />
-		<main>
+		<a
+			href="#konten"
+			class="bg-brand-green sr-only z-50 rounded-md px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+		>
+			Langsung ke konten
+		</a>
+		{pengaturan?.banner_promo && (
+			<p class="bg-brand-green-dark px-4 py-2 text-center text-sm font-medium text-white">
+				{pengaturan.banner_promo}
+			</p>
+		)}
+		<Header logo={settings?.logo} />
+		<main id="konten" class="flex-1">
 			<slot />
 		</main>
+		<Footer pengaturan={pengaturan} />
+		<WaFloat ctx={wa} afterHero={floatAfterHero} />
 		<EmDashBodyEnd page={pageCtx} />
 	</body>
 </html>

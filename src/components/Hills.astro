@@ -1,0 +1,24 @@
+---
+// Hill silhouette ("pemandangan" and "Boemi"): marks the edge where one section meets the next.
+// `color` is the fill of the section that comes next, so the hills look like that section rising.
+// `back` is the farther ridge: a tone between the two sections, never a translucent overlay.
+interface Props {
+	color: string;
+	back: string;
+	class?: string;
+	flip?: boolean;
+}
+
+const { color, back, class: className = "h-10 md:h-16", flip = false } = Astro.props;
+---
+
+<svg
+	viewBox="0 0 1440 120"
+	preserveAspectRatio="none"
+	aria-hidden="true"
+	focusable="false"
+	class:list={["block w-full", flip && "-scale-x-100", className]}
+>
+	<path d="M0 70C180 28 360 26 540 58s360 44 540 0 240-38 360-14v76H0Z" fill={back} />
+	<path d="M0 96c240-36 420-28 640-6s380 22 580-12 220-6 220 2v40H0Z" fill={color} />
+</svg>

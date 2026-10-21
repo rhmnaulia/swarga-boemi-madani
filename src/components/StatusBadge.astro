@@ -1,0 +1,34 @@
+---
+interface Props {
+	status: "tersedia" | "sisa-sedikit" | "habis";
+	sisaUnit?: number | null;
+	class?: string;
+}
+
+const { status, sisaUnit, class: className } = Astro.props;
+
+const label =
+	status === "habis"
+		? "Terjual habis"
+		: typeof sisaUnit === "number" && sisaUnit > 0
+			? `Sisa ${sisaUnit} unit`
+			: status === "sisa-sedikit"
+				? "Sisa sedikit"
+				: "Tersedia";
+
+const tone = {
+	tersedia: "bg-brand-green-soft text-brand-green-dark",
+	"sisa-sedikit": "bg-brand-orange-soft text-brand-orange-dark",
+	habis: "bg-line text-muted",
+}[status];
+---
+
+<span
+	class:list={[
+		"inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold",
+		tone,
+		className,
+	]}
+>
+	{label}
+</span>

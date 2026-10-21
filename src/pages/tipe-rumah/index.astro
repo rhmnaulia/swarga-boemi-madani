@@ -1,17 +1,91 @@
 ---
+import HouseCard from "../../components/HouseCard.astro";
+import Icon from "../../components/Icon.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import WaButton from "../../components/WaButton.astro";
+import { BEBAS_BIAYA } from "../../content/keunggulan";
 import Base from "../../layouts/Base.astro";
 import { getHouseTypes } from "../../lib/cms";
 
 const houses = await getHouseTypes(Astro.cache);
 ---
 
-<Base title="Tipe Rumah">
-	<h1>Tipe Rumah</h1>
-	<ul>
-		{houses.map((h) => (
-			<li>
-				<a href={`/tipe-rumah/${h.id}`}>{h.data.nama}</a> ({h.data.ketersediaan})
-			</li>
-		))}
-	</ul>
+<Base
+	title="Tipe Rumah"
+	description="Empat tipe rumah di Swarga Boemi Madani Gombong: Granada 36/84, Cordoba 45/84, Andalusia 60/84, dan Alexandria 80/136. Cek ketersediaan unit."
+>
+	<PageHeader
+		title="Tipe rumah"
+		intro="Empat tipe di satu kawasan. Semua dengan surat lengkap dan pengecekan kualitas sebelum serah terima."
+	>
+		<p class="text-brand-green-dark mt-5 inline-flex items-center gap-2 font-semibold">
+			<Icon name="doc" class="size-5" />
+			{BEBAS_BIAYA}
+		</p>
+	</PageHeader>
+
+	<section class="container-page py-10 md:py-14">
+		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+			{houses.map((h, i) => (
+				<HouseCard slug={h.id} house={h.data} priority={i < 2} class="reveal" style={`--i: ${i}`} />
+			))}
+		</div>
+
+		<div class="border-line mt-12 overflow-x-auto rounded-(--radius-card) border bg-white">
+			<table class="w-full min-w-[34rem] text-left text-sm">
+				<caption class="p-4 text-left text-base font-semibold">Perbandingan singkat</caption>
+				<thead class="bg-sand">
+					<tr>
+						<th scope="col" class="px-4 py-3">
+							Tipe
+						</th>
+						<th scope="col" class="px-4 py-3">
+							LB/LT (m²)
+						</th>
+						<th scope="col" class="px-4 py-3">
+							Lantai
+						</th>
+						<th scope="col" class="px-4 py-3">
+							Kamar
+						</th>
+						<th scope="col" class="px-4 py-3">
+							Listrik
+						</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-(--color-line)">
+					{houses.map((h) => (
+						<tr>
+							<th scope="row" class="px-4 py-3">
+								<a
+									href={`/tipe-rumah/${h.id}`}
+									class="text-brand-green font-semibold hover:underline"
+								>
+									{h.data.nama}
+								</a>
+							</th>
+							<td class="px-4 py-3">
+								{h.data.luas_bangunan}/{h.data.luas_tanah}
+							</td>
+							<td class="px-4 py-3">{h.data.lantai}</td>
+							<td class="px-4 py-3">
+								{h.data.kamar_tidur} KT, {h.data.kamar_mandi} KM
+							</td>
+							<td class="px-4 py-3">{h.data.listrik}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="mt-10 flex flex-col gap-3 sm:flex-row">
+			<WaButton />
+			<a
+				href="/kontak#survei"
+				class="border-line pressable inline-flex min-h-12 items-center justify-center rounded-(--radius-btn) border bg-white px-5 font-semibold hover:border-brand-green"
+			>
+				Jadwalkan Survei Lokasi
+			</a>
+		</div>
+	</section>
 </Base>

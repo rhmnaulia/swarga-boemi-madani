@@ -1,0 +1,70 @@
+---
+import type { HouseType } from "../../emdash-env";
+import { hargaLabel, lantaiLabel } from "../lib/format";
+import Icon from "./Icon.astro";
+import Media from "./Media.astro";
+import StatusBadge from "./StatusBadge.astro";
+
+interface Props {
+	slug: string;
+	house: HouseType;
+	priority?: boolean;
+	class?: string;
+	style?: string;
+}
+
+const { slug, house: h, priority = false, class: className, style } = Astro.props;
+---
+
+<a
+	href={`/tipe-rumah/${slug}`}
+	class:list={[
+		"group border-line hover:border-brand-green flex flex-col overflow-hidden rounded-(--radius-card) border bg-white transition-colors",
+		className,
+	]}
+	style={style}
+>
+	<div class="relative">
+		<Media
+			image={h.foto_utama}
+			alt={`Rumah tipe ${h.nama} ${h.luas_bangunan}/${h.luas_tanah}`}
+			ratio="4/3"
+			sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 85vw"
+			priority={priority}
+			class="rounded-none"
+		/>
+		<StatusBadge
+			status={h.ketersediaan}
+			sisaUnit={h.sisa_unit}
+			class="absolute top-3 left-3 shadow-sm"
+		/>
+	</div>
+	<div class="flex flex-1 flex-col p-5">
+		<h3 class="text-muted text-sm font-semibold tracking-normal">Cluster {h.nama}</h3>
+		<p class="text-ink mt-1 text-4xl leading-none font-extrabold tracking-tight tabular-nums">
+			{h.luas_bangunan}
+			<span class="text-sage">/</span>
+			<span class="text-muted text-2xl">{h.luas_tanah}</span>
+		</p>
+		<p class="text-muted mt-1 text-xs">luas bangunan / tanah (m²)</p>
+		<ul class="border-line mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t pt-3 text-sm">
+			<li class="inline-flex items-center gap-1.5">
+				<Icon name="bed" class="text-brand-green size-4" />
+				{h.kamar_tidur} KT
+			</li>
+			<li class="inline-flex items-center gap-1.5">
+				<Icon name="bath" class="text-brand-green size-4" />
+				{h.kamar_mandi} KM
+			</li>
+			<li class="inline-flex items-center gap-1.5">
+				<Icon name="stairs" class="text-brand-green size-4" />
+				{lantaiLabel(h.lantai)}
+			</li>
+		</ul>
+		<p class="mt-auto pt-4 font-bold">{hargaLabel(h)}</p>
+		<span class="text-brand-green mt-1 inline-flex items-center gap-1.5 text-sm font-semibold group-hover:underline">
+			Lihat Denah & Spesifikasi
+			<Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-0.5" />
+		</span>
+	</div>
+</a>

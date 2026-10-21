@@ -1,0 +1,102 @@
+---
+import Icon from "../components/Icon.astro";
+import type { IconName } from "../components/icons";
+import MapEmbed from "../components/MapEmbed.astro";
+import PageHeader from "../components/PageHeader.astro";
+import SurveyForm from "../components/SurveyForm.astro";
+import WaButton from "../components/WaButton.astro";
+import { ADDRESS_LINE, WA_DISPLAY } from "../content/site";
+import Base from "../layouts/Base.astro";
+import { getHouseTypes, getPengaturan } from "../lib/cms";
+
+const [pengaturan, houses] = await Promise.all([
+	getPengaturan(Astro.cache),
+	getHouseTypes(Astro.cache),
+]);
+const p = pengaturan;
+const sosmed = (
+	[
+		["instagram", "Instagram", p?.instagram],
+		["tiktok", "TikTok", p?.tiktok],
+		["facebook", "Facebook", p?.facebook],
+		["youtube", "YouTube", p?.youtube],
+	] as [IconName, string, string | undefined][]
+).filter(([, , url]) => url);
+---
+
+<Base
+	title="Kontak & Survei Lokasi"
+	description="Hubungi marketing Swarga Boemi Madani via WhatsApp 0811-2052-225 atau jadwalkan survei lokasi di Gombong, Kebumen."
+>
+	<PageHeader title="Kontak" intro="Tim marketing kami siap menjawab lewat WhatsApp.">
+		<div class="mt-6">
+			<WaButton />
+		</div>
+	</PageHeader>
+
+	<section class="container-page grid gap-12 py-10 md:py-14 lg:grid-cols-[1fr_1.2fr]">
+		<div class="space-y-8">
+			<dl class="space-y-5">
+				<div>
+					<dt class="text-muted flex items-center gap-2 text-sm">
+						<Icon name="whatsapp" class="size-4" />
+						WhatsApp
+					</dt>
+					<dd class="mt-0.5 text-lg font-semibold">{WA_DISPLAY}</dd>
+				</div>
+				{p?.email && (
+					<div>
+						<dt class="text-muted flex items-center gap-2 text-sm">
+							<Icon name="mail" class="size-4" />
+							Email
+						</dt>
+						<dd class="mt-0.5 text-lg font-semibold">
+							<a href={`mailto:${p.email}`} class="hover:underline">
+								{p.email}
+							</a>
+						</dd>
+					</div>
+				)}
+				<div>
+					<dt class="text-muted flex items-center gap-2 text-sm">
+						<Icon name="pin" class="size-4" />
+						Alamat
+					</dt>
+					<dd class="mt-0.5 font-semibold">{p?.alamat || ADDRESS_LINE}</dd>
+				</div>
+			</dl>
+
+			{sosmed.length > 0 && (
+				<div>
+					<p class="text-muted text-sm">Ikuti kami</p>
+					<ul class="mt-2 flex flex-wrap gap-2">
+						{sosmed.map(([icon, label, url]) => (
+							<li>
+								<a
+									href={url}
+									target="_blank"
+									rel="noopener"
+									class="border-line inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 font-semibold hover:border-brand-green"
+								>
+									<Icon name={icon} class="size-5" />
+									{label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+
+			<MapEmbed mapsUrl={p?.google_maps_url} />
+		</div>
+
+		<div id="survei" class="border-line rounded-(--radius-card) border bg-white p-5 md:p-8">
+			<h2 class="text-2xl">Jadwalkan Survei Lokasi</h2>
+			<p class="text-muted mt-1 mb-6">
+				Isi form ini, tim marketing kami akan menghubungi Anda lewat WhatsApp untuk memastikan
+				jadwalnya.
+			</p>
+			<SurveyForm tipe={houses.map((h) => h.data.nama)} />
+		</div>
+	</section>
+</Base>

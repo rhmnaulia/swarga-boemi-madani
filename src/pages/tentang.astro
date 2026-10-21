@@ -1,0 +1,99 @@
+---
+import Icon from "../components/Icon.astro";
+import PageHeader from "../components/PageHeader.astro";
+import WaButton from "../components/WaButton.astro";
+import {
+	LEGALITAS_PERUSAHAAN,
+	LEGALITAS_PROYEK,
+	NILAI_CARE,
+	PENDIRI,
+	PROFIL,
+} from "../content/tentang";
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+	title="Tentang PT ASBM"
+	description="PT. Abyakta Sadawira Bangun Mandiri, developer perumahan dan kontraktor di Kebumen sejak 2022. Anggota REI dengan legalitas lengkap."
+>
+	<PageHeader title="Tentang kami" intro="Developer perumahan dan kontraktor dari Kebumen." />
+
+	<section class="container-page grid gap-10 py-10 md:py-14 lg:grid-cols-[1.4fr_1fr]">
+		<div class="max-w-2xl space-y-4 text-lg">
+			{PROFIL.map((p) => (
+				<p>{p}</p>
+			))}
+		</div>
+		<div class="bg-brand-green-soft self-start rounded-(--radius-card) p-5">
+			<Icon name="badge" class="text-brand-green size-8" />
+			<p class="mt-2 text-lg font-bold">Anggota REI</p>
+			<p class="text-brand-green-dark">
+				Real Estat Indonesia, NPA 02-01085. Akad jual beli dilakukan di notaris.
+			</p>
+		</div>
+	</section>
+
+	{PENDIRI.length > 0 && (
+		<section class="border-line border-t py-12">
+			<div class="container-page">
+				<h2 class="text-2xl md:text-3xl">Pendiri</h2>
+				<ul class="mt-6 grid gap-6 md:grid-cols-2">
+					{PENDIRI.map((p) => (
+						<li>
+							<p class="text-lg font-bold">{p.name}</p>
+							<p class="text-muted">{p.role}</p>
+							{p.bio && <p class="mt-2">{p.bio}</p>}
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	)}
+
+	{NILAI_CARE.length > 0 && (
+		<section class="bg-sand py-12">
+			<div class="container-page">
+				<h2 class="text-2xl md:text-3xl">Nilai kami: CARE</h2>
+				<ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+					{NILAI_CARE.map((v) => (
+						<li>
+							<p class="text-brand-green text-4xl font-bold">{v.letter}</p>
+							<p class="mt-1 font-bold">{v.word}</p>
+							<p class="text-muted mt-1 text-sm">{v.text}</p>
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	)}
+
+	<section class="border-line border-t py-12 md:py-16">
+		<div class="container-page grid gap-10 lg:grid-cols-2">
+			<div>
+				<h2 class="text-2xl md:text-3xl">Legalitas perusahaan</h2>
+				<dl class="mt-6 divide-y divide-(--color-line)">
+					{LEGALITAS_PERUSAHAAN.map((l) => (
+						<div class="grid gap-1 py-3 sm:grid-cols-[10rem_1fr]">
+							<dt class="text-muted">{l.label}</dt>
+							<dd class="font-semibold">{l.value}</dd>
+						</div>
+					))}
+				</dl>
+			</div>
+			<div>
+				<h2 class="text-2xl md:text-3xl">Perizinan proyek</h2>
+				<ul class="mt-6 space-y-3">
+					{LEGALITAS_PROYEK.map((l) => (
+						<li class="flex items-start gap-3">
+							<Icon name="check" class="text-brand-green mt-0.5 size-5 shrink-0" />
+							{l}
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+		<div class="container-page mt-10">
+			<WaButton variant="outline" />
+		</div>
+	</section>
+</Base>

@@ -3,6 +3,25 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base title="Halaman tidak ditemukan">
-	<h1>Halaman tidak ditemukan</h1>
-	<a href="/">Kembali ke beranda</a>
+	<section class="container-page grid min-h-[50vh] place-items-center py-16 text-center">
+		<div class="max-w-md">
+			<p class="text-brand-green font-semibold">404</p>
+			<h1 class="mt-2 text-3xl">Halaman tidak ditemukan</h1>
+			<p class="text-muted mt-3">Alamatnya mungkin salah ketik atau halamannya sudah dipindah.</p>
+			<div class="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+				<a
+					href="/"
+					class="bg-brand-green pressable inline-flex min-h-12 items-center justify-center rounded-(--radius-btn) px-5 font-semibold text-white hover:bg-brand-green-dark"
+				>
+					Ke beranda
+				</a>
+				<a
+					href="/tipe-rumah"
+					class="border-line pressable inline-flex min-h-12 items-center justify-center rounded-(--radius-btn) border bg-white px-5 font-semibold hover:border-brand-green"
+				>
+					Lihat tipe rumah
+				</a>
+			</div>
+		</div>
+	</section>
 </Base>

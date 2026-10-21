@@ -1,0 +1,123 @@
+---
+interface Props {
+	/** House type names for the "minat" options, from the CMS. */
+	tipe: string[];
+	/** Preselect an option, e.g. when linked from a house type page. */
+	selected?: string;
+}
+
+const { tipe, selected } = Astro.props;
+const minat = [...tipe.map((t) => `Rumah tipe ${t}`), "Jasa konstruksi", "Lainnya"];
+const hari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu", "Fleksibel"];
+
+const field =
+	"border-line focus:border-brand-green mt-1.5 block min-h-12 w-full rounded-(--radius-btn) border bg-white px-3.5 text-base outline-none";
+const label = "block text-sm font-semibold";
+---
+
+<form method="post" action="/api/lead" class="space-y-5" data-survey-form>
+	<input type="hidden" name="event" value="form_survei" />
+	<input type="hidden" name="page" value={Astro.url.pathname} />
+
+	<div>
+		<label for="nama" class={label}>
+			Nama
+		</label>
+		<input
+			id="nama"
+			name="nama"
+			type="text"
+			required
+			minlength="2"
+			maxlength="80"
+			autocomplete="name"
+			placeholder="Nama Anda"
+			class={field}
+		/>
+	</div>
+
+	<div>
+		<label for="whatsapp" class={label}>
+			Nomor WhatsApp
+		</label>
+		<input
+			id="whatsapp"
+			name="whatsapp"
+			type="tel"
+			inputmode="tel"
+			required
+			pattern="^(\+?62|0)8[0-9\s\-]{7,15}$"
+			maxlength="20"
+			autocomplete="tel"
+			placeholder="08xx xxxx xxxx"
+			aria-describedby="whatsapp-hint"
+			class={field}
+		/>
+		<p id="whatsapp-hint" class="text-muted mt-1 text-sm">
+			Contoh: 0812 3456 7890
+		</p>
+	</div>
+
+	<div class="grid gap-5 sm:grid-cols-2">
+		<div>
+			<label for="minat" class={label}>
+				Minat
+			</label>
+			<select id="minat" name="minat" required class={field}>
+				<option value="" disabled selected={!selected}>
+					Pilih salah satu
+				</option>
+				{minat.map((m) => (
+					<option value={m} selected={m === selected}>
+						{m}
+					</option>
+				))}
+			</select>
+		</div>
+		<div>
+			<label for="hari" class={label}>
+				Hari survei yang diinginkan
+			</label>
+			<select id="hari" name="hari" required class={field}>
+				<option value="" disabled selected>
+					Pilih hari
+				</option>
+				{hari.map((h) => (
+					<option value={h}>{h}</option>
+				))}
+			</select>
+		</div>
+	</div>
+
+	<div>
+		<label for="catatan" class={label}>
+			Catatan <span class="text-muted font-normal">(opsional)</span>
+		</label>
+		<textarea
+			id="catatan"
+			name="catatan"
+			rows="3"
+			maxlength="500"
+			placeholder="Misalnya jam yang cocok atau pertanyaan Anda"
+			class:list={[field, "py-3"]}
+		></textarea>
+	</div>
+
+	<!-- Honeypot: hidden from people, bots tend to fill it. -->
+	<div class="absolute -left-[9999px]" aria-hidden="true">
+		<label for="website">Website</label>
+		<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+	</div>
+
+	<p class="text-muted text-sm">
+		Dengan mengirim form ini, Anda setuju data di atas dipakai tim marketing kami untuk menghubungi
+		Anda terkait survei lokasi, sesuai UU Pelindungan Data Pribadi.
+	</p>
+
+	<button
+		type="submit"
+		class="bg-brand-orange hover:bg-brand-orange-dark pressable inline-flex min-h-12 w-full items-center justify-center rounded-(--radius-btn) px-6 font-semibold text-white transition-colors sm:w-auto"
+	>
+		Jadwalkan Survei Lokasi
+	</button>
+</form>

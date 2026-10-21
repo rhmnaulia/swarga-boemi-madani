@@ -1,0 +1,45 @@
+---
+import { getPengaturan } from "../lib/cms";
+import { buildWaLink, type WaContext } from "../lib/wa";
+import Icon from "./Icon.astro";
+
+interface Props {
+	ctx?: WaContext;
+	label?: string;
+	variant?: "primary" | "outline" | "light";
+	class?: string;
+}
+
+const {
+	ctx = { kind: "umum" },
+	label = "Chat Marketing via WhatsApp",
+	variant = "primary",
+	class: className,
+} = Astro.props;
+
+const pengaturan = await getPengaturan(Astro.cache);
+const href = buildWaLink(ctx, pengaturan?.whatsapp);
+const houseType = ctx.kind === "tipe" ? ctx.nama.toLowerCase() : "";
+
+const styles = {
+	primary: "bg-brand-orange text-white hover:bg-brand-orange-dark",
+	outline: "border border-brand-green text-brand-green bg-transparent hover:bg-brand-green-soft",
+	light: "bg-white text-brand-green-dark hover:bg-brand-green-soft",
+};
+---
+
+<a
+	href={href}
+	target="_blank"
+	rel="noopener"
+	data-wa
+	data-house-type={houseType}
+	class:list={[
+		"pressable inline-flex min-h-12 items-center justify-center gap-2 rounded-(--radius-btn) px-5 text-[0.95rem] font-semibold transition-colors",
+		styles[variant],
+		className,
+	]}
+>
+	<Icon name="whatsapp" class="size-5 shrink-0" />
+	<span class="text-center">{label}</span>
+</a>

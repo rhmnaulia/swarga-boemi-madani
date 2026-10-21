@@ -8,8 +8,6 @@ function remember(cache: RouteCache, hint: CacheHint | undefined) {
 	if (cache?.enabled && hint) cache.set(hint);
 }
 
-export const WA_FALLBACK = "628112052225";
-
 export async function getPengaturan(cache?: RouteCache) {
 	const { entries, cacheHint } = await getEmDashCollection("pengaturan", { limit: 1 });
 	remember(cache, cacheHint);
