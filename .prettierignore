@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+emdash-env.d.ts
+worker-configuration.d.ts
+.agents
+dist
+.astro
+.wrangler

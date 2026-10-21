@@ -1,0 +1,678 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "Swarga Boemi Madani Residence",
+		"description": "Situs perumahan Swarga Boemi Madani Residence dan profil PT ASBM",
+		"author": "PT. Abyakta Sadawira Bangun Mandiri"
+	},
+	"settings": {
+		"title": "Swarga Boemi Madani Residence",
+		"tagline": "Smart & Comfort Living",
+		"timezone": "Asia/Jakarta"
+	},
+	"collections": [
+		{
+			"slug": "house_type",
+			"label": "Tipe Rumah",
+			"labelSingular": "Tipe Rumah",
+			"description": "Empat tipe rumah di Swarga Boemi Madani. Ubah status, sisa unit, dan harga di sini.",
+			"icon": "house",
+			"sortOrder": 1,
+			"urlPattern": "/tipe-rumah/{slug}",
+			"supports": ["drafts", "revisions"],
+			"titleField": "nama",
+			"admin": {
+				"listColumns": ["ketersediaan", "sisa_unit", "label_harga"],
+				"quickCreate": false
+			},
+			"fields": [
+				{
+					"slug": "nama",
+					"label": "Nama tipe (mis. Cordoba)",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "urutan",
+					"label": "Urutan tampil (1 = paling atas)",
+					"type": "integer",
+					"required": true,
+					"defaultValue": 1
+				},
+				{
+					"slug": "ketersediaan",
+					"label": "Status ketersediaan",
+					"type": "select",
+					"required": true,
+					"defaultValue": "tersedia",
+					"validation": {
+						"options": ["tersedia", "sisa-sedikit", "habis"]
+					}
+				},
+				{
+					"slug": "sisa_unit",
+					"label": "Sisa unit (kosongkan jika tidak ingin ditampilkan)",
+					"type": "integer",
+					"validation": {
+						"min": 0
+					}
+				},
+				{
+					"slug": "harga",
+					"label": "Harga dalam Rupiah, angka saja (opsional)",
+					"type": "number",
+					"validation": {
+						"min": 0
+					}
+				},
+				{
+					"slug": "label_harga",
+					"label": "Teks harga (mis. \"Mulai Rp 350 jt\"). Kosong = \"Hubungi kami untuk harga\"",
+					"type": "string"
+				},
+				{
+					"slug": "luas_bangunan",
+					"label": "Luas bangunan (m²)",
+					"type": "integer",
+					"required": true
+				},
+				{
+					"slug": "luas_tanah",
+					"label": "Luas tanah (m²)",
+					"type": "integer",
+					"required": true
+				},
+				{
+					"slug": "lantai",
+					"label": "Jumlah lantai (mis. \"2 + rooftop\")",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "kamar_tidur",
+					"label": "Kamar tidur (mis. \"4+1\")",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "kamar_mandi",
+					"label": "Kamar mandi",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "listrik",
+					"label": "Daya listrik (mis. \"1300 W\")",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "fitur",
+					"label": "Fitur & bonus",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "teks",
+								"label": "Fitur",
+								"type": "string",
+								"required": true
+							}
+						]
+					}
+				},
+				{
+					"slug": "foto_utama",
+					"label": "Foto utama",
+					"type": "image"
+				},
+				{
+					"slug": "galeri",
+					"label": "Galeri foto",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "foto",
+								"label": "Foto",
+								"type": "image",
+								"required": true
+							}
+						]
+					}
+				},
+				{
+					"slug": "denah",
+					"label": "Gambar denah",
+					"type": "image"
+				},
+				{
+					"slug": "spesifikasi",
+					"label": "Spesifikasi bangunan",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "item",
+								"label": "Bagian (mis. Atap)",
+								"type": "string",
+								"required": true
+							},
+							{
+								"slug": "keterangan",
+								"label": "Keterangan (mis. Genteng Sokka)",
+								"type": "string",
+								"required": true
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"slug": "progress_update",
+			"label": "Progres Pembangunan",
+			"labelSingular": "Update Progres",
+			"description": "Foto dan catatan progres pembangunan serta pengecekan kualitas (QC).",
+			"icon": "hammer",
+			"sortOrder": 2,
+			"routable": false,
+			"supports": ["drafts", "scheduling"],
+			"titleField": "judul",
+			"dateField": "tanggal",
+			"fields": [
+				{
+					"slug": "judul",
+					"label": "Judul (mis. Pengecoran Cluster Andalusia)",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "tanggal",
+					"label": "Tanggal",
+					"type": "datetime",
+					"required": true,
+					"indexed": true
+				},
+				{
+					"slug": "caption",
+					"label": "Keterangan singkat",
+					"type": "text"
+				},
+				{
+					"slug": "foto",
+					"label": "Foto",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "foto",
+								"label": "Foto",
+								"type": "image",
+								"required": true
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"slug": "construction_project",
+			"label": "Portofolio Konstruksi",
+			"labelSingular": "Proyek Konstruksi",
+			"description": "Proyek jasa konstruksi PT ASBM. Hanya tampil di situs jika \"Tampilkan di situs\" dicentang.",
+			"icon": "buildings",
+			"sortOrder": 3,
+			"routable": false,
+			"supports": ["drafts"],
+			"titleField": "judul",
+			"admin": {
+				"listColumns": ["kota", "tahun", "tampilkan"]
+			},
+			"fields": [
+				{
+					"slug": "judul",
+					"label": "Nama proyek",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "kota",
+					"label": "Kota",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "jenis_proyek",
+					"label": "Jenis proyek (mis. Rumah tinggal, Renovasi)",
+					"type": "string"
+				},
+				{
+					"slug": "tahun",
+					"label": "Tahun",
+					"type": "string"
+				},
+				{
+					"slug": "deskripsi",
+					"label": "Deskripsi singkat",
+					"type": "text",
+					"validation": {
+						"maxLength": 300
+					}
+				},
+				{
+					"slug": "foto",
+					"label": "Foto",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "foto",
+								"label": "Foto",
+								"type": "image",
+								"required": true
+							}
+						]
+					}
+				},
+				{
+					"slug": "tampilkan",
+					"label": "Tampilkan di situs",
+					"type": "boolean",
+					"defaultValue": false
+				}
+			]
+		},
+		{
+			"slug": "testimonial",
+			"label": "Testimoni",
+			"labelSingular": "Testimoni",
+			"description": "Testimoni pembeli. Hanya tampil jika sudah ada izin tertulis dari pembeli.",
+			"icon": "chat-circle-text",
+			"sortOrder": 4,
+			"routable": false,
+			"supports": ["drafts"],
+			"titleField": "nama",
+			"admin": {
+				"listColumns": ["keterangan", "izin_tertulis"]
+			},
+			"fields": [
+				{
+					"slug": "nama",
+					"label": "Nama pembeli",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "keterangan",
+					"label": "Keterangan (mis. Pembeli Cluster Granada)",
+					"type": "string"
+				},
+				{
+					"slug": "kutipan",
+					"label": "Isi testimoni",
+					"type": "text",
+					"required": true,
+					"validation": {
+						"maxLength": 500
+					}
+				},
+				{
+					"slug": "foto",
+					"label": "Foto pembeli (opsional)",
+					"type": "image"
+				},
+				{
+					"slug": "video_url",
+					"label": "Link video (opsional)",
+					"type": "url"
+				},
+				{
+					"slug": "izin_tertulis",
+					"label": "Sudah ada izin tertulis dari pembeli",
+					"type": "boolean",
+					"required": true,
+					"defaultValue": false
+				}
+			]
+		},
+		{
+			"slug": "pengaturan",
+			"label": "Pengaturan Situs",
+			"labelSingular": "Pengaturan",
+			"description": "Kontak, sosial media, dan promo. Cukup satu entri, jangan tambah entri baru.",
+			"icon": "gear",
+			"sortOrder": 5,
+			"routable": false,
+			"supports": [],
+			"titleField": "nama",
+			"admin": {
+				"quickCreate": false
+			},
+			"fields": [
+				{
+					"slug": "nama",
+					"label": "Nama entri (biarkan)",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "whatsapp",
+					"label": "Nomor WhatsApp marketing (format 628…, tanpa + dan spasi)",
+					"type": "string",
+					"required": true,
+					"validation": {
+						"pattern": "^628[0-9]{7,12}$"
+					}
+				},
+				{
+					"slug": "email",
+					"label": "Email",
+					"type": "string"
+				},
+				{
+					"slug": "alamat",
+					"label": "Alamat lengkap",
+					"type": "text"
+				},
+				{
+					"slug": "google_maps_url",
+					"label": "Link Google Maps",
+					"type": "url"
+				},
+				{
+					"slug": "instagram",
+					"label": "Link Instagram",
+					"type": "url"
+				},
+				{
+					"slug": "tiktok",
+					"label": "Link TikTok",
+					"type": "url"
+				},
+				{
+					"slug": "facebook",
+					"label": "Link Facebook",
+					"type": "url"
+				},
+				{
+					"slug": "youtube",
+					"label": "Link YouTube",
+					"type": "url"
+				},
+				{
+					"slug": "banner_promo",
+					"label": "Teks promo di atas menu (kosongkan jika tidak ada promo)",
+					"type": "string",
+					"validation": {
+						"maxLength": 120
+					}
+				},
+				{
+					"slug": "total_sisa_unit",
+					"label": "Total sisa unit untuk beranda (kosongkan untuk menyembunyikan)",
+					"type": "integer",
+					"validation": {
+						"min": 0
+					}
+				}
+			]
+		}
+	],
+	"content": {
+		"house_type": [
+			{
+				"id": "house-granada",
+				"slug": "granada",
+				"status": "published",
+				"data": {
+					"nama": "Granada",
+					"urutan": 1,
+					"ketersediaan": "sisa-sedikit",
+					"luas_bangunan": 36,
+					"luas_tanah": 84,
+					"lantai": "1",
+					"kamar_tidur": "2",
+					"kamar_mandi": "1",
+					"listrik": "1300 W",
+					"fitur": [],
+					"spesifikasi": [
+						{
+							"item": "Dinding",
+							"keterangan": "Cat Jotun"
+						},
+						{
+							"item": "Atap",
+							"keterangan": "Genteng Sokka"
+						},
+						{
+							"item": "Pintu depan",
+							"keterangan": "Kayu jati"
+						},
+						{
+							"item": "Lantai",
+							"keterangan": "Keramik motif granit"
+						},
+						{
+							"item": "Sertifikat",
+							"keterangan": "SHM"
+						},
+						{
+							"item": "Listrik",
+							"keterangan": "1300 W"
+						}
+					]
+				}
+			},
+			{
+				"id": "house-cordoba",
+				"slug": "cordoba",
+				"status": "published",
+				"data": {
+					"nama": "Cordoba",
+					"urutan": 2,
+					"ketersediaan": "tersedia",
+					"luas_bangunan": 45,
+					"luas_tanah": 84,
+					"lantai": "1",
+					"kamar_tidur": "2",
+					"kamar_mandi": "1",
+					"listrik": "1300 W",
+					"fitur": [
+						{
+							"teks": "Smart lock door"
+						}
+					],
+					"spesifikasi": [
+						{
+							"item": "Dinding",
+							"keterangan": "Cat Jotun"
+						},
+						{
+							"item": "Atap",
+							"keterangan": "Genteng Sokka"
+						},
+						{
+							"item": "Pintu depan",
+							"keterangan": "Kayu jati"
+						},
+						{
+							"item": "Lantai",
+							"keterangan": "Keramik motif granit"
+						},
+						{
+							"item": "Sertifikat",
+							"keterangan": "SHM"
+						},
+						{
+							"item": "Listrik",
+							"keterangan": "1300 W"
+						}
+					]
+				}
+			},
+			{
+				"id": "house-andalusia",
+				"slug": "andalusia",
+				"status": "published",
+				"data": {
+					"nama": "Andalusia",
+					"urutan": 3,
+					"ketersediaan": "tersedia",
+					"luas_bangunan": 60,
+					"luas_tanah": 84,
+					"lantai": "2",
+					"kamar_tidur": "3",
+					"kamar_mandi": "2",
+					"listrik": "2200 W",
+					"fitur": [
+						{
+							"teks": "Smart lock door"
+						},
+						{
+							"teks": "AC 3/4 PK"
+						},
+						{
+							"teks": "Balkon"
+						}
+					],
+					"spesifikasi": [
+						{
+							"item": "Dinding",
+							"keterangan": "Cat Jotun"
+						},
+						{
+							"item": "Atap",
+							"keterangan": "Genteng Sokka"
+						},
+						{
+							"item": "Pintu depan",
+							"keterangan": "Kayu jati"
+						},
+						{
+							"item": "Lantai",
+							"keterangan": "Keramik motif granit"
+						},
+						{
+							"item": "Sertifikat",
+							"keterangan": "SHM"
+						},
+						{
+							"item": "Listrik",
+							"keterangan": "2200 W"
+						}
+					]
+				}
+			},
+			{
+				"id": "house-alexandria",
+				"slug": "alexandria",
+				"status": "published",
+				"data": {
+					"nama": "Alexandria",
+					"urutan": 4,
+					"ketersediaan": "tersedia",
+					"luas_bangunan": 80,
+					"luas_tanah": 136,
+					"lantai": "2 + rooftop",
+					"kamar_tidur": "4+1",
+					"kamar_mandi": "4",
+					"listrik": "2200 W",
+					"fitur": [
+						{
+							"teks": "Smart lock door"
+						},
+						{
+							"teks": "AC 3/4 PK"
+						},
+						{
+							"teks": "Water heater"
+						},
+						{
+							"teks": "Balkon"
+						},
+						{
+							"teks": "Rooftop"
+						}
+					],
+					"spesifikasi": [
+						{
+							"item": "Dinding",
+							"keterangan": "Cat Jotun"
+						},
+						{
+							"item": "Atap",
+							"keterangan": "Genteng Sokka"
+						},
+						{
+							"item": "Pintu depan",
+							"keterangan": "Kayu jati"
+						},
+						{
+							"item": "Lantai",
+							"keterangan": "Keramik motif granit"
+						},
+						{
+							"item": "Sertifikat",
+							"keterangan": "SHM"
+						},
+						{
+							"item": "Listrik",
+							"keterangan": "2200 W"
+						}
+					]
+				}
+			}
+		],
+		"construction_project": [
+			{
+				"id": "proj-contoh-1",
+				"status": "published",
+				"data": {
+					"judul": "Contoh: Rumah tinggal 2 lantai",
+					"kota": "Gombong",
+					"jenis_proyek": "Rumah tinggal",
+					"tahun": "2024",
+					"deskripsi": "Entri contoh. Ganti dengan proyek asli lalu centang \"Tampilkan di situs\".",
+					"tampilkan": false
+				}
+			},
+			{
+				"id": "proj-contoh-2",
+				"status": "published",
+				"data": {
+					"judul": "Contoh: Renovasi rumah",
+					"kota": "Kebumen",
+					"jenis_proyek": "Renovasi",
+					"tahun": "2023",
+					"deskripsi": "Entri contoh. Ganti dengan proyek asli lalu centang \"Tampilkan di situs\".",
+					"tampilkan": false
+				}
+			}
+		],
+		"testimonial": [
+			{
+				"id": "testi-contoh",
+				"status": "published",
+				"data": {
+					"nama": "Contoh Pembeli",
+					"keterangan": "Pembeli Cluster Granada",
+					"kutipan": "Entri contoh. Isi dengan testimoni asli, lalu centang izin tertulis setelah pembeli setuju.",
+					"izin_tertulis": false
+				}
+			}
+		],
+		"pengaturan": [
+			{
+				"id": "pengaturan-utama",
+				"status": "published",
+				"data": {
+					"nama": "Pengaturan utama",
+					"whatsapp": "628112052225",
+					"alamat": "Jl. Merbabu RT.04 RW.03, Desa Wero, Kec. Gombong, Kab. Kebumen, Jawa Tengah"
+				}
+			}
+		]
+	}
+}

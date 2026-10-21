@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "@fontsource-variable/plus-jakarta-sans";
+
+@theme {
+	/* TODO(data): replace with exact hex from the logo file */
+	--color-brand-green: #2f6b3a;
+	--color-brand-orange: #e07a1f;
+	--font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+}

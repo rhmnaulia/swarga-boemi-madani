@@ -1,0 +1,17 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getHouseTypes } from "../../lib/cms";
+
+const houses = await getHouseTypes(Astro.cache);
+---
+
+<Base title="Tipe Rumah">
+	<h1>Tipe Rumah</h1>
+	<ul>
+		{houses.map((h) => (
+			<li>
+				<a href={`/tipe-rumah/${h.id}`}>{h.data.nama}</a> ({h.data.ketersediaan})
+			</li>
+		))}
+	</ul>
+</Base>

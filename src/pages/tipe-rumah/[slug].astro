@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getHouseType } from "../../lib/cms";
+
+const { slug } = Astro.params;
+const house = slug ? await getHouseType(slug, Astro.cache) : null;
+if (!house) return Astro.rewrite("/404");
+const d = house.data;
+---
+
+<Base title={`Rumah Tipe ${d.nama} ${d.luas_bangunan}/${d.luas_tanah}`}>
+	<h1>Tipe {d.nama}</h1>
+	<p>
+		LB/LT {d.luas_bangunan}/{d.luas_tanah} m², {d.lantai} lantai
+	</p>
+	<p data-testid="ketersediaan">Status: {d.ketersediaan}</p>
+	<p>{d.label_harga || "Hubungi kami untuk harga"}</p>
+</Base>
