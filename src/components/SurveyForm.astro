@@ -1,15 +1,19 @@
 ---
+import { HARI, minatOptions } from "../lib/lead";
+
 interface Props {
 	/** House type names for the "minat" options, from the CMS. */
 	tipe: string[];
 	/** Preselect an option, e.g. `?minat=` from a house type page. Ignored unless it matches. */
 	selected?: string | null;
+	/** The last attempt did not reach the Sheet (`?gagal=1` from /api/lead). */
+	failed?: boolean;
 }
 
-const { tipe, selected } = Astro.props;
-const minat = [...tipe.map((t) => `Rumah tipe ${t}`), "Jasa konstruksi", "Lainnya"];
+const { tipe, selected, failed = false } = Astro.props;
+const minat = minatOptions(tipe);
 const preselect = selected && minat.includes(selected) ? selected : null;
-const hari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu", "Fleksibel"];
+const hari = HARI;
 
 // Errors show only after the person has touched a field (`:user-invalid`), never on load.
 const field =
@@ -21,6 +25,20 @@ const error = "text-danger mt-1 hidden text-sm peer-user-invalid:block";
 <form method="post" action="/api/lead" class="space-y-5" data-survey-form>
 	<input type="hidden" name="event" value="form_survei" />
 	<input type="hidden" name="page" value={Astro.url.pathname} />
+	<!-- Filled by the tracking script with where the visitor came from. -->
+	<input type="hidden" name="utm_source" />
+	<input type="hidden" name="utm_medium" />
+	<input type="hidden" name="utm_campaign" />
+	<input type="hidden" name="referrer" />
+
+	{failed && (
+		<p
+			role="alert"
+			class="border-danger/30 text-danger rounded-(--radius-btn) border bg-white p-4 text-sm font-semibold"
+		>
+			Maaf, data Anda belum terkirim. Silakan coba lagi, atau chat kami langsung lewat WhatsApp.
+		</p>
+	)}
 
 	<div>
 		<label for="nama" class={label}>

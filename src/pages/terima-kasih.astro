@@ -2,6 +2,13 @@
 import Icon from "../components/Icon.astro";
 import WaButton from "../components/WaButton.astro";
 import Base from "../layouts/Base.astro";
+import { getHouseTypes } from "../lib/cms";
+import { minatOptions } from "../lib/lead";
+
+// `?minat=` comes from /api/lead after a successful form post; it shapes the WhatsApp message.
+const houses = await getHouseTypes(Astro.cache);
+const raw = Astro.url.searchParams.get("minat");
+const minat = raw && minatOptions(houses.map((h) => h.data.nama)).includes(raw) ? raw : undefined;
 ---
 
 <Base title="Terima kasih" dock={false}>
@@ -17,7 +24,7 @@ import Base from "../layouts/Base.astro";
 				Ingin lebih cepat? Lanjutkan chat sekarang.
 			</p>
 			<div class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-				<WaButton label="Lanjut chat via WhatsApp" />
+				<WaButton ctx={{ kind: "survei", minat }} label="Lanjut chat via WhatsApp" />
 				<a
 					href="/"
 					class="border-line pressable inline-flex min-h-12 items-center justify-center rounded-(--radius-btn) border bg-white px-5 font-semibold hover:border-brand-green"
@@ -28,3 +35,13 @@ import Base from "../layouts/Base.astro";
 		</div>
 	</section>
 </Base>
+
+<script>
+	// Count the form once in GA4, then drop the query so a reload does not count it again.
+	const params = new URLSearchParams(location.search);
+	const minat = params.get("minat");
+	if (minat !== null) {
+		window.gtag?.("event", "form_survei", { minat });
+		history.replaceState(null, "", location.pathname);
+	}
+</script>

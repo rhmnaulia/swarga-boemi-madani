@@ -5,6 +5,7 @@ import { createPublicPageContext } from "emdash/page";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import ActionDock from "../components/ActionDock.astro";
+import Tracking from "../components/Tracking.astro";
 import { PROJECT_NAME } from "../content/site";
 import { getPengaturan } from "../lib/cms";
 import type { WaContext } from "../lib/wa";
@@ -98,6 +99,7 @@ const pageCtx = createPublicPageContext({
 				});
 			});
 		</script>
+		<Tracking />
 		<slot name="head" />
 		<EmDashHead page={pageCtx} />
 	</head>

@@ -60,6 +60,7 @@ const kontak: { icon: IconName; label: string; value: string; href: string; exte
 			<SurveyForm
 				tipe={houses.map((h) => h.data.nama)}
 				selected={Astro.url.searchParams.get("minat")}
+				failed={Astro.url.searchParams.has("gagal")}
 			/>
 		</div>
 

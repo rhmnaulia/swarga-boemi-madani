@@ -6,7 +6,7 @@ export type WaContext =
 	| { kind: "umum" }
 	| { kind: "konstruksi" }
 	| { kind: "tipe"; nama: string; luasBangunan: number; luasTanah: number }
-	| { kind: "survei"; nama: string };
+	| { kind: "survei"; minat?: string };
 
 export function waMessage(ctx: WaContext): string {
 	switch (ctx.kind) {
@@ -14,8 +14,14 @@ export function waMessage(ctx: WaContext): string {
 			return `Halo, saya tertarik dengan rumah tipe ${ctx.nama} (${ctx.luasBangunan}/${ctx.luasTanah}) di ${SHORT_NAME}. Boleh info harga dan sisa unit?`;
 		case "konstruksi":
 			return "Halo, saya ingin konsultasi jasa konstruksi.";
-		case "survei":
-			return `Halo, saya ${ctx.nama}. Saya baru mengisi form jadwal survei lokasi ${SHORT_NAME}.`;
+		case "survei": {
+			// The person's name is not passed along: it would end up in URLs and analytics.
+			const minat =
+				ctx.minat && ctx.minat !== "Lainnya"
+					? ` untuk ${ctx.minat[0].toLowerCase()}${ctx.minat.slice(1)}`
+					: "";
+			return `Halo, saya baru mengisi form jadwal survei lokasi ${SHORT_NAME}${minat}.`;
+		}
 		default:
 			return `Halo, saya ingin info perumahan ${SHORT_NAME}.`;
 	}

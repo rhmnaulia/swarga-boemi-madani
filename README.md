@@ -40,6 +40,13 @@ On a fresh database the seed schema is applied on first request. Then either:
   pnpm exec emdash seed seed/seed.json --database .wrangler/state/v3/d1/miniflare-D1DatabaseObject/<hash>.sqlite
   ```
 
+Leads locally: `cp .dev.vars.example .dev.vars`. With the values empty, `/api/lead` logs each lead to the
+terminal instead of sending it. To write to a real test Sheet, fill both values (see
+[scripts/apps-script/README.md](scripts/apps-script/README.md)) and restart `pnpm dev`.
+
+Link prefetch (`prefetch` in `astro.config.mjs`) only runs in the built site (`pnpm build && pnpm preview`),
+not in `pnpm dev`.
+
 Other scripts:
 
 ```bash
@@ -72,11 +79,28 @@ tentang) lives in `src/content/`.
 | ----------------------- | ------------------------------------ | ----------------------------------------------------------------------- |
 | `EMDASH_SITE_URL`       | Worker var                           | Public origin. **Set before admin setup**: passkeys bind to this origin |
 | `EMDASH_ENCRYPTION_KEY` | Worker secret, `.env` locally        | Encrypts plugin secrets. **Back up** (see below)                        |
-| `LEADS_WEBHOOK_URL`     | Worker secret                        | Apps Script web app URL (M2)                                            |
-| `LEADS_SECRET`          | Worker secret + Apps Script property | Shared secret; Apps Script rejects requests without it (M2)             |
-| `PUBLIC_GA4_ID`         | build env                            | GA4 measurement ID (M2)                                                 |
+| `LEADS_WEBHOOK_URL`     | Worker secret, `.dev.vars` locally   | Apps Script web app URL (`…/exec`)                                      |
+| `LEADS_SECRET`          | Worker secret + Apps Script property | Shared secret; Apps Script rejects requests without it                  |
+| `PUBLIC_GA4_ID`         | `.env` at build time                 | GA4 measurement ID (`G-…`). Empty = no GA4                              |
 
-Set secrets with `pnpm wrangler secret put <NAME>`. Never commit `.env`.
+Set secrets with `pnpm wrangler secret put <NAME>`. Never commit `.env` or `.dev.vars`.
+
+## Leads & tracking
+
+- Every WhatsApp link goes through `buildWaLink` (`src/lib/wa.ts`) and carries `data-wa`. A tap sends GA4
+  `wa_click` (`page`, `house_type`) and a beacon to `/api/lead`.
+- The source (`utm_*`, outside referrer) is read on the first page of a visit and kept in `sessionStorage`.
+- The survey form is a plain HTML form post: it works without JS. `/api/lead` validates it
+  (`src/lib/lead.ts`), waits for the Sheet to confirm, then redirects to `/terima-kasih`. If the Sheet is
+  unreachable the visitor goes back to the form with an error and a WhatsApp option, so a lead is never
+  reported as sent when it was not.
+- `/terima-kasih` sends GA4 `form_survei` once. Names and phone numbers never go to GA4 or into URLs.
+- Apps Script setup (Bahasa Indonesia, for the client): [scripts/apps-script/README.md](scripts/apps-script/README.md).
+
+GA4 setup: create a property and a Web data stream for the final domain, copy the measurement ID into `.env`
+as `PUBLIC_GA4_ID`, rebuild and deploy. In GA4 Admin > Events, mark `wa_click` and `form_survei` as key events.
+gtag.js loads after the page is idle, so page views from visitors who leave in the first second or two are not
+counted.
 
 ### Backup `EMDASH_ENCRYPTION_KEY`
 

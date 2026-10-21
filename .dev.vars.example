@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local dev. Leave empty to log leads to the terminal instead of the Sheet.
+# Production values are Worker secrets: pnpm wrangler secret put <NAME>
+LEADS_WEBHOOK_URL=
+LEADS_SECRET=
