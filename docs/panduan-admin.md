@@ -13,7 +13,8 @@ Tampilan admin mengikuti bahasa HP. Kalau masih berbahasa Inggris, buka **Pengat
 
 1. Setiap perubahan **tersimpan otomatis** (muncul tanda centang), tetapi **belum tampil** di website.
 2. Supaya tampil, tekan tombol biru **Publikasikan** di bagian atas. Setelah itu perubahan langsung tampil.
-   Kalau belum terlihat, muat ulang halaman website.
+   Kalau belum terlihat, muat ulang halaman website. Pengecualian: **Pengaturan Situs** langsung tampil
+   tanpa tombol Publikasikan (lihat bagian 8).
 3. Tombol **Lihat Situs** di bagian atas membuka website untuk mengecek hasilnya.
 4. Yang terhapus masuk ke **Tempat Sampah** dan masih bisa dikembalikan.
 5. Jangan mengubah menu di bagian **Admin** (Tipe Konten, Pengaya, Impor). Menu itu mengatur struktur
@@ -165,7 +166,12 @@ Ada 1 contoh testimoni bawaan yang tidak tampil. Ubah dengan data asli atau pind
    - **Email**, **Alamat lengkap**, **Link Google Maps**.
    - **Link Instagram / TikTok / Facebook / YouTube**: link lengkap ke profil, diawali `https://`.
 3. Jangan mengubah **Nama entri**.
-4. Tekan **Publikasikan**.
+4. Tunggu sampai muncul **Disimpan**. Di sini tidak ada tombol Publikasikan: perubahan langsung tampil di
+   website begitu tersimpan, jadi ketik dengan teliti.
+5. **Jangan tekan "Batalkan publikasi"** (ikon di bagian atas). Tombol itu langsung bekerja tanpa konfirmasi
+   dan menyembunyikan seluruh pengaturan: email, media sosial, dan promo hilang dari website. Kalau tidak
+   sengaja tertekan, tekan **Publikasikan sekarang** di bagian atas, lalu **Publikasikan sekarang** lagi di
+   kotak konfirmasi.
 
 Logo website diunggah di **Pengaturan > Umum**.
 
