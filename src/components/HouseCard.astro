@@ -1,7 +1,7 @@
 ---
 import type { HouseType } from "../../emdash-env";
 import { FOTO_TIPE } from "../content/foto";
-import { hargaLabel, lantaiLabel } from "../lib/format";
+import { HARGA_FALLBACK, hargaLabel, lantaiLabel } from "../lib/format";
 import Icon from "./Icon.astro";
 import Media from "./Media.astro";
 import StatusBadge from "./StatusBadge.astro";
@@ -71,7 +71,14 @@ const {
 				{lantaiLabel(h.lantai)}
 			</li>
 		</ul>
-		<p class="mt-auto pt-4 font-bold">{hargaLabel(h)}</p>
+		<p
+			class:list={[
+				"mt-auto pt-4",
+				hargaLabel(h) === HARGA_FALLBACK ? "text-muted text-sm font-semibold" : "font-bold",
+			]}
+		>
+			{hargaLabel(h)}
+		</p>
 		<span class="text-brand-green mt-1 inline-flex items-center gap-1.5 text-sm font-semibold group-hover:underline">
 			Lihat Denah & Spesifikasi
 			<Icon name="arrow" class="size-4 transition-transform group-hover:translate-x-0.5" />

@@ -2,314 +2,191 @@
 	"brosur-granada": {
 		"width": 1123,
 		"height": 1585,
-		"widths": [
-			480,
-			960,
-			1123
-		]
+		"widths": [480, 960, 1123]
 	},
 	"brosur-cordoba": {
 		"width": 1091,
 		"height": 1541,
-		"widths": [
-			480,
-			960,
-			1091
-		]
+		"widths": [480, 960, 1091]
 	},
 	"brosur-andalusia": {
 		"width": 1084,
 		"height": 1521,
-		"widths": [
-			480,
-			960,
-			1084
-		]
+		"widths": [480, 960, 1084]
 	},
 	"brosur-alexandria": {
 		"width": 1126,
 		"height": 1588,
-		"widths": [
-			480,
-			960,
-			1126
-		]
+		"widths": [480, 960, 1126]
 	},
 	"brosur-masterplan": {
 		"width": 1112,
 		"height": 1571,
-		"widths": [
-			480,
-			960,
-			1112
-		]
+		"widths": [480, 960, 1112]
 	},
 	"brosur-book-now": {
 		"width": 894,
 		"height": 894,
-		"widths": [
-			480,
-			894
-		]
+		"widths": [480, 894]
 	},
 	"poster-pemandangan": {
 		"width": 1080,
 		"height": 1080,
-		"widths": [
-			480,
-			960,
-			1080
-		]
+		"widths": [480, 960, 1080]
 	},
 	"granada-render": {
 		"width": 1123,
 		"height": 300,
-		"widths": [
-			480,
-			960,
-			1123
-		]
+		"widths": [480, 960, 1123]
 	},
 	"granada-denah": {
 		"width": 340,
 		"height": 630,
-		"widths": [
-			340
-		]
+		"widths": [340]
 	},
 	"cordoba-render": {
 		"width": 470,
 		"height": 260,
-		"widths": [
-			470
-		]
+		"widths": [470]
 	},
 	"cordoba-denah": {
 		"width": 330,
 		"height": 625,
-		"widths": [
-			330
-		]
+		"widths": [330]
 	},
 	"andalusia-render": {
 		"width": 595,
 		"height": 270,
-		"widths": [
-			480,
-			595
-		]
+		"widths": [480, 595]
 	},
 	"andalusia-denah": {
 		"width": 630,
 		"height": 615,
-		"widths": [
-			480,
-			630
-		]
+		"widths": [480, 630]
 	},
 	"alexandria-render": {
 		"width": 570,
 		"height": 360,
-		"widths": [
-			480,
-			570
-		]
+		"widths": [480, 570]
 	},
 	"alexandria-denah": {
 		"width": 715,
 		"height": 430,
-		"widths": [
-			480,
-			715
-		]
+		"widths": [480, 715]
 	},
 	"alexandria-jalan": {
 		"width": 667,
 		"height": 375,
-		"widths": [
-			480,
-			667
-		]
+		"widths": [480, 667]
 	},
 	"kawasan-udara": {
 		"width": 675,
 		"height": 370,
-		"widths": [
-			480,
-			675
-		]
+		"widths": [480, 675]
 	},
 	"fasad-3-tipe": {
 		"width": 791,
 		"height": 1394,
-		"widths": [
-			480,
-			791
-		]
+		"widths": [480, 791]
 	},
 	"granada-unit": {
 		"width": 430,
 		"height": 573,
-		"widths": [
-			430
-		]
+		"widths": [430]
 	},
 	"progres-pondasi": {
 		"width": 603,
 		"height": 1071,
-		"widths": [
-			480,
-			603
-		]
+		"widths": [480, 603]
 	},
 	"progres-2-lantai": {
 		"width": 1397,
 		"height": 629,
-		"widths": [
-			480,
-			960,
-			1397
-		]
+		"widths": [480, 960, 1397]
 	},
 	"progres-paving": {
 		"width": 527,
 		"height": 703,
-		"widths": [
-			480,
-			527
-		]
+		"widths": [480, 527]
 	},
 	"qc-inspeksi": {
 		"width": 720,
 		"height": 1090,
-		"widths": [
-			480,
-			720
-		]
+		"widths": [480, 720]
 	},
 	"akad-serah-terima": {
 		"width": 666,
 		"height": 1184,
-		"widths": [
-			480,
-			666
-		]
+		"widths": [480, 666]
 	},
 	"akad-jual-beli": {
 		"width": 678,
 		"height": 1206,
-		"widths": [
-			480,
-			678
-		]
+		"widths": [480, 678]
 	},
 	"goody-bag": {
 		"width": 975,
 		"height": 731,
-		"widths": [
-			480,
-			960,
-			975
-		]
+		"widths": [480, 960, 975]
 	},
 	"tmo": {
 		"width": 982,
 		"height": 1745,
-		"widths": [
-			480,
-			960,
-			982
-		]
+		"widths": [480, 960, 982]
 	},
 	"rei-academy": {
 		"width": 960,
 		"height": 1280,
-		"widths": [
-			480,
-			960
-		]
+		"widths": [480, 960]
 	},
 	"rei-pertemuan": {
 		"width": 906,
 		"height": 680,
-		"widths": [
-			480,
-			906
-		]
+		"widths": [480, 906]
 	},
 	"rei-balaikota": {
 		"width": 1188,
 		"height": 891,
-		"widths": [
-			480,
-			960,
-			1188
-		]
+		"widths": [480, 960, 1188]
 	},
 	"rei-diklat-pajak": {
 		"width": 663,
 		"height": 1285,
-		"widths": [
-			480,
-			663
-		]
+		"widths": [480, 663]
 	},
 	"presentasi-1": {
 		"width": 1153,
 		"height": 865,
-		"widths": [
-			480,
-			960,
-			1153
-		]
+		"widths": [480, 960, 1153]
 	},
 	"presentasi-2": {
 		"width": 820,
 		"height": 1094,
-		"widths": [
-			480,
-			820
-		]
+		"widths": [480, 820]
 	},
 	"presentasi-3": {
 		"width": 818,
 		"height": 1091,
-		"widths": [
-			480,
-			818
-		]
+		"widths": [480, 818]
 	},
 	"presentasi-4": {
 		"width": 897,
 		"height": 1196,
-		"widths": [
-			480,
-			897
-		]
+		"widths": [480, 897]
 	},
 	"presentasi-5": {
 		"width": 1328,
 		"height": 996,
-		"widths": [
-			480,
-			960,
-			1328
-		]
+		"widths": [480, 960, 1328]
 	},
 	"presentasi-6": {
 		"width": 1344,
 		"height": 1008,
-		"widths": [
-			480,
-			960,
-			1344
-		]
+		"widths": [480, 960, 1344]
 	},
 	"logo-asbm": {
 		"width": 391,
 		"height": 245,
-		"widths": [
-			391
-		]
+		"widths": [391]
 	}
 }
