@@ -8,7 +8,7 @@ import { BROSUR_TIPE, FOTO, FOTO_TIPE, FOTO_ALT } from "../../content/foto";
 import { BEBAS_BIAYA } from "../../content/keunggulan";
 import Base from "../../layouts/Base.astro";
 import { getHouseType, getHouseTypes } from "../../lib/cms";
-import { hargaLabel, lantaiLabel } from "../../lib/format";
+import { HARGA_FALLBACK, hargaLabel, lantaiLabel } from "../../lib/format";
 import { houseLd, siteOrigin } from "../../lib/seo";
 import type { WaContext } from "../../lib/wa";
 
@@ -100,7 +100,14 @@ const facts = [
 			</p>
 			<p class="text-muted mt-1 text-xs">luas bangunan / tanah (m²)</p>
 
-			<p class="border-line mt-5 border-t pt-5 text-2xl font-extrabold">{hargaLabel(d)}</p>
+			<p
+				class:list={[
+					"border-line mt-5 border-t pt-5",
+					hargaLabel(d) === HARGA_FALLBACK ? "text-muted font-semibold" : "text-2xl font-extrabold",
+				]}
+			>
+				{hargaLabel(d)}
+			</p>
 
 			<dl class="mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4 lg:grid-cols-2">
 				{facts.map((f) => (
@@ -207,7 +214,7 @@ const facts = [
 						<li>
 							<a
 								href={`/tipe-rumah/${o.id}`}
-								class="border-line flex min-h-16 items-center justify-between gap-3 rounded-(--radius-card) border bg-white px-4 py-3 hover:border-brand-green"
+								class="border-line flex min-h-16 items-center justify-between gap-3 rounded-(--radius-card) border bg-white px-4 py-3 hover:border-brand-green pressable-soft"
 							>
 								<span>
 									<span class="block font-semibold">{o.data.nama}</span>

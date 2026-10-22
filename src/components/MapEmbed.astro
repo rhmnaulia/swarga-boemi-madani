@@ -23,7 +23,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${quer
 	>
 		<button
 			type="button"
-			class="text-brand-green-dark absolute inset-0 flex flex-col items-center justify-center gap-2 font-semibold"
+			class="text-brand-green-dark pressable-soft absolute inset-0 flex flex-col items-center justify-center gap-2 font-semibold"
 			data-map-load
 		>
 			<Icon name="pin" class="size-9" />
@@ -60,6 +60,9 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${quer
 			frame.loading = "lazy";
 			frame.referrerPolicy = "no-referrer-when-downgrade";
 			frame.className = "absolute inset-0 size-full border-0";
+			frame.style.opacity = "0";
+			frame.style.transition = "opacity 200ms cubic-bezier(0.23, 1, 0.32, 1)";
+			frame.addEventListener("load", () => (frame.style.opacity = "1"), { once: true });
 			box.replaceChildren(frame);
 		});
 	});

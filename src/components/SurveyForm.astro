@@ -13,7 +13,7 @@ const preselect = selected && minat.includes(selected) ? selected : null;
 const hari = HARI;
 
 const field =
-	"peer border-line focus:border-brand-green user-invalid:border-danger mt-1.5 block min-h-12 w-full rounded-(--radius-btn) border bg-white px-3.5 text-base outline-none transition-colors";
+	"peer border-line focus:border-brand-green user-invalid:border-danger mt-1.5 block min-h-12 w-full rounded-(--radius-btn) border bg-white px-3.5 text-base transition-colors";
 const label = "block text-sm font-semibold";
 const error = "text-danger mt-1 hidden text-sm peer-user-invalid:block";
 ---
@@ -96,7 +96,7 @@ const error = "text-danger mt-1 hidden text-sm peer-user-invalid:block";
 		<legend class={label}>Hari survei yang diinginkan</legend>
 		<div class="mt-2 grid grid-cols-4 gap-2">
 			{hari.map((h, i) => (
-				<label class="border-line has-checked:border-brand-green has-checked:bg-brand-green has-checked:text-paper has-focus-visible:outline-brand-orange pressable flex min-h-11 cursor-pointer items-center justify-center rounded-(--radius-btn) border bg-white px-1 text-sm font-semibold transition-colors has-focus-visible:outline-2 has-focus-visible:outline-offset-2">
+				<label class="border-line has-checked:border-brand-green has-checked:bg-brand-green has-checked:text-paper has-focus-visible:outline-brand-orange pressable flex min-h-11 cursor-pointer items-center justify-center rounded-(--radius-btn) border bg-white px-1 text-sm font-semibold has-focus-visible:outline-2 has-focus-visible:outline-offset-2">
 					<input type="radio" name="hari" value={h} required={i === 0} class="sr-only" />
 					{h}
 				</label>
@@ -130,7 +130,7 @@ const error = "text-danger mt-1 hidden text-sm peer-user-invalid:block";
 
 	<button
 		type="submit"
-		class="bg-brand-orange hover:bg-brand-orange-dark pressable inline-flex min-h-12 w-full items-center justify-center rounded-(--radius-btn) px-6 font-semibold text-white transition-colors disabled:opacity-70 sm:w-auto"
+		class="bg-brand-orange hover:bg-brand-orange-dark pressable inline-flex min-h-12 w-full items-center justify-center rounded-(--radius-btn) px-6 font-semibold text-white disabled:opacity-70 sm:w-auto"
 		data-submit
 	>
 		Jadwalkan Survei Lokasi

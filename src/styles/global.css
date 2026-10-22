@@ -72,9 +72,24 @@
 }
 
 @utility pressable {
-	transition: transform 140ms var(--ease-out);
+	transition:
+		transform 140ms var(--ease-out),
+		background-color 150ms ease,
+		border-color 150ms ease,
+		color 150ms ease;
 	&:active {
 		transform: scale(0.97);
+	}
+}
+
+@utility pressable-soft {
+	transition:
+		transform 140ms var(--ease-out),
+		background-color 150ms ease,
+		border-color 150ms ease,
+		color 150ms ease;
+	&:active {
+		transform: scale(0.985);
 	}
 }
 
@@ -109,14 +124,14 @@
 @keyframes page-in {
 	from {
 		opacity: 0;
-		transform: translateY(10px);
+		transform: translateY(6px);
 	}
 }
 ::view-transition-old(root) {
 	animation: page-out 120ms var(--ease-out) both;
 }
 ::view-transition-new(root) {
-	animation: page-in 260ms var(--ease-out) 60ms both;
+	animation: page-in 200ms var(--ease-out) 40ms both;
 }
 ::view-transition-group(site-header),
 ::view-transition-group(action-dock),
@@ -137,7 +152,8 @@
 	.reveal {
 		transition: opacity 200ms ease;
 	}
-	.pressable:active {
+	.pressable:active,
+	.pressable-soft:active {
 		transform: none;
 	}
 }
@@ -154,14 +170,15 @@
 	opacity: 0;
 	transform: scale(0.96);
 	transition:
-		opacity 200ms var(--ease-out),
-		transform 200ms var(--ease-out),
-		display 200ms allow-discrete,
-		overlay 200ms allow-discrete;
+		opacity 150ms var(--ease-out),
+		transform 150ms var(--ease-out),
+		display 150ms allow-discrete,
+		overlay 150ms allow-discrete;
 }
 .lightbox[open] {
 	opacity: 1;
 	transform: none;
+	transition-duration: 200ms;
 }
 @starting-style {
 	.lightbox[open] {

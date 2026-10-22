@@ -54,11 +54,11 @@ export const BROSUR_TIPE: Record<string, FotoKey> = {
 };
 
 export const BROSUR: FotoKey[] = [
-	"brosur-masterplan",
 	"brosur-granada",
 	"brosur-cordoba",
 	"brosur-andalusia",
 	"brosur-alexandria",
+	"brosur-masterplan",
 	"poster-pemandangan",
 	"brosur-book-now",
 ];

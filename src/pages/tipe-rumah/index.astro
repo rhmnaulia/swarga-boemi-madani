@@ -10,7 +10,7 @@ import { BEBAS_BIAYA } from "../../content/keunggulan";
 import { ALUR_BELI } from "../../content/pembelian";
 import Base from "../../layouts/Base.astro";
 import { getHouseTypes } from "../../lib/cms";
-import { hargaLabel, lantaiLabel } from "../../lib/format";
+import { HARGA_FALLBACK, hargaLabel, lantaiLabel } from "../../lib/format";
 
 const houses = await getHouseTypes(Astro.cache);
 const BROSUR_CAPTION = {
@@ -46,7 +46,7 @@ const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.dat
 					<li class="shrink-0">
 						<a
 							href={`#${h.id}`}
-							class="border-line hover:border-brand-green inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 text-sm font-semibold"
+							class="border-line hover:border-brand-green pressable inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 text-sm font-semibold"
 						>
 							{h.data.nama}
 							<span class="text-muted font-medium tabular-nums">
@@ -72,7 +72,7 @@ const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.dat
 						id={h.id}
 						class="grid gap-6 py-10 first:pt-0 last:pb-0 md:py-12 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-12"
 					>
-						<a href={detail} class="block" tabindex="-1" aria-hidden="true">
+						<a href={detail} class="pressable-soft block" tabindex="-1" aria-hidden="true">
 							<Media
 								image={d.foto_utama}
 								fallback={FOTO_TIPE[h.id]?.foto}
@@ -118,7 +118,16 @@ const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.dat
 								</ul>
 							)}
 
-							<p class="mt-5 text-lg font-bold">{hargaLabel(d)}</p>
+							<p
+								class:list={[
+									"mt-5",
+									hargaLabel(d) === HARGA_FALLBACK
+										? "text-muted font-semibold"
+										: "text-lg font-bold",
+								]}
+							>
+								{hargaLabel(d)}
+							</p>
 
 							<div class="mt-5 flex flex-col gap-3 sm:flex-row">
 								<a
@@ -152,7 +161,14 @@ const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.dat
 				Ketuk brosur untuk memperbesar. Brosur dibuat tahun 2022; spesifikasi, bonus, dan harga
 				terbaru tanyakan ke tim marketing.
 			</p>
-			<PhotoGrid fotos={BROSUR} captions={BROSUR_CAPTION} cols={4} hint class="mt-6 md:mt-8" />
+			<PhotoGrid
+				fotos={BROSUR}
+				captions={BROSUR_CAPTION}
+				cols={4}
+				layout="grid"
+				hint
+				class="mt-6 md:mt-8"
+			/>
 		</div>
 	</section>
 
