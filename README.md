@@ -174,6 +174,11 @@ Checked from Cloudflare docs when writing this (Oct 2026). Re-check on the dashb
 | KV               | 100k reads/day, 1,000 writes/day, 1 GB                         | Cache writes on misses, well below |
 | Images (binding) | 5,000 unique transformations/month                             | Few hundred image variants         |
 
+## Handover
+
+Analytics and leads are set up only after the client agrees. The full go-live and handover checklist is in
+[docs/handover.md](docs/handover.md). Admin guide for the client: [docs/panduan-admin.md](docs/panduan-admin.md).
+
 ## Data menyusul
 
 Search `TODO(data)` for every placeholder. Seed data that is still placeholder (JSON has no comments):
