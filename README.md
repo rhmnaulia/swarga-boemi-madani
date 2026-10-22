@@ -187,4 +187,5 @@ Search `TODO(data)` for every placeholder. Seed data that is still placeholder (
 - `construction_project`: 2 example entries with `tampilkan: false`.
 - `testimonial`: 1 example entry with `izin_tertulis: false`.
 - `pengaturan`: only WhatsApp and address; email and social links are empty.
-- Brand colors in `src/styles/global.css` are placeholders until the logo hex values arrive.
+- Brand colors in `src/styles/global.css` are sampled from a logo image in the discovery PDF; confirm against
+  the source logo file.

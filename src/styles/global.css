@@ -2,16 +2,20 @@
 @import "@fontsource-variable/plus-jakarta-sans";
 
 @theme {
-	/* TODO(data): replace with exact hex from the logo file.
-	   Roles: forest = dark anchor, green = links/icons, sage = soft surface,
-	   terracotta (roof tile) = primary CTA only. All text pairs pass WCAG AA. */
-	--color-brand-green: #2e6a3f;
+	/* From the logo: green #087c3c, roof orange #f88c48 (sampled; swap for the source file's hex).
+	   Roles: forest = dark anchor, green = links/icons, sage = soft surface, orange = primary CTA
+	   only. Green and CTA orange are a shade darker than the logo so every text pair passes WCAG AA;
+	   the logo orange itself (orange-light) only sits on forest. */
+	--color-brand-green: #087539;
 	--color-brand-green-dark: #1c3a29;
 	--color-brand-green-soft: #e3ebdf;
 	--color-sage: #b9cdb3;
-	--color-brand-orange: #b5522a;
-	--color-brand-orange-dark: #93411f;
-	--color-brand-orange-soft: #f6e1d6;
+	/* Far hill ridge where a forest band meets the cream page: muted, so it never reads as a stripe. */
+	--color-moss: #2e6a3f;
+	--color-brand-orange: #b9561f;
+	--color-brand-orange-dark: #9a4518;
+	--color-brand-orange-soft: #fbe4d4;
+	--color-brand-orange-light: #f88c48;
 
 	--color-paper: #f8f4ec;
 	--color-sand: #efe7d9;
