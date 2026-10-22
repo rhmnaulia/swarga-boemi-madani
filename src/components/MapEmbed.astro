@@ -3,7 +3,6 @@ import { ADDRESS_LINE } from "../content/site";
 import Icon from "./Icon.astro";
 
 interface Props {
-	/** pengaturan.google_maps_url: the share link admins copy from Google Maps. */
 	mapsUrl?: string | null;
 	class?: string;
 }
@@ -12,7 +11,6 @@ const { mapsUrl, class: className } = Astro.props;
 const query = encodeURIComponent(`Swarga Boemi Madani Residence, ${ADDRESS_LINE}`);
 const embedSrc = `https://maps.google.com/maps?q=${query}&z=15&output=embed`;
 const openUrl = mapsUrl || `https://www.google.com/maps/search/?api=1&query=${query}`;
-// Opens turn-by-turn navigation in the Maps app on phones.
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
 ---
 
@@ -23,7 +21,6 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${quer
 		data-map
 		data-src={embedSrc}
 	>
-		<!-- Facade: Google's iframe weighs ~1 MB, so it only loads on request. -->
 		<button
 			type="button"
 			class="text-brand-green-dark absolute inset-0 flex flex-col items-center justify-center gap-2 font-semibold"

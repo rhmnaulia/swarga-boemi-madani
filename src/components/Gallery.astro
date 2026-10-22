@@ -1,60 +1,73 @@
 ---
 import { Image } from "emdash/ui";
+import { FOTO_ALT, type FotoKey } from "../content/foto";
 import Icon from "./Icon.astro";
 import Media from "./Media.astro";
+import Photo from "./Photo.astro";
 
 type ImageValue = { id: string; src?: string; alt?: string; width?: number; height?: number };
 
 interface Props {
 	images: ImageValue[];
-	/** Base description used when a photo has no alt text. */
 	alt: string;
+	fallback?: FotoKey[];
 }
 
-const { images, alt } = Astro.props;
-const altFor = (img: ImageValue, i: number) => img.alt || `${alt}, foto ${i + 1}`;
+const { images, alt, fallback = [] } = Astro.props;
+const items: ({ image: ImageValue } | { foto: FotoKey })[] =
+	images.length > 0 ? images.map((image) => ({ image })) : fallback.map((foto) => ({ foto }));
+const altFor = (item: (typeof items)[number], i: number) =>
+	"foto" in item ? FOTO_ALT[item.foto] : item.image.alt || `${alt}, foto ${i + 1}`;
 ---
 
-{images.length === 0 ? (
+{items.length === 0 ? (
 	<Media alt={alt} ratio="4/3" priority />
 ) : (
 	<div data-gallery>
 		<div class="relative">
 			<ul
 				data-gallery-strip
-				class="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 md:mx-0 md:px-0"
+				class="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0"
 			>
-				{images.map((img, i) => (
-					<li class="w-[88%] shrink-0 snap-center md:w-[calc(50%-0.375rem)]">
+				{items.map((item, i) => (
+					<li class="w-[88%] shrink-0 snap-center md:w-auto md:first:col-span-4">
 						<button
 							type="button"
 							class="pressable block w-full"
 							data-gallery-open={i}
-							aria-label={`Perbesar ${altFor(img, i)}`}
+							aria-label={`Perbesar ${altFor(item, i)}`}
 						>
 							<Media
-								image={img}
-								alt={altFor(img, i)}
+								image={"image" in item ? item.image : undefined}
+								fallback={"foto" in item ? item.foto : undefined}
+								alt={altFor(item, i)}
 								ratio="4/3"
 								priority={i === 0}
-								sizes="(min-width: 48rem) 36rem, 88vw"
+								sizes={
+									i === 0
+										? "(min-width: 64rem) 40rem, (min-width: 48rem) 100vw, 88vw"
+										: "(min-width: 48rem) 10rem, 88vw"
+								}
 							/>
 						</button>
 					</li>
 				))}
 			</ul>
-			{images.length > 1 && (
+			{items.length > 1 && (
 				<span
 					class="pointer-events-none absolute top-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white tabular-nums md:hidden"
 					aria-hidden="true"
 					data-gallery-count
 				>
-					1 / {images.length}
+					1 / {items.length}
 				</span>
 			)}
 		</div>
-		{images.length > 1 && (
-			<p class="text-muted mt-2 text-sm">{images.length} foto. Geser untuk melihat.</p>
+		{items.length > 1 && (
+			<p class="text-muted mt-2 text-sm">
+				{items.length} foto. <span class="md:hidden">Geser untuk melihat.</span>
+				<span class="hidden md:inline">Ketuk foto untuk memperbesar.</span>
+			</p>
 		)}
 
 		<dialog class="lightbox" aria-label="Galeri foto" data-gallery-dialog>
@@ -67,14 +80,18 @@ const altFor = (img: ImageValue, i: number) => img.alt || `${alt}, foto ${i + 1}
 				<Icon name="close" class="size-6" />
 			</button>
 			<ul class="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto" data-gallery-track>
-				{images.map((img, i) => (
+				{items.map((item, i) => (
 					<li class="grid h-full w-full shrink-0 snap-center place-items-center p-2">
-						<Image
-							image={img}
-							alt={altFor(img, i)}
-							sizes="100vw"
-							class="max-h-full w-auto max-w-full object-contain"
-						/>
+						{"image" in item ? (
+							<Image
+								image={item.image}
+								alt={altFor(item, i)}
+								sizes="100vw"
+								class="max-h-full w-auto max-w-full object-contain"
+							/>
+						) : (
+							<Photo foto={item.foto} class="max-h-full w-auto max-w-full object-contain" />
+						)}
 					</li>
 				))}
 			</ul>
@@ -88,39 +105,6 @@ const altFor = (img: ImageValue, i: number) => img.alt || `${alt}, foto ${i + 1}
 	}
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
-	}
-	.lightbox {
-		width: 100vw;
-		height: 100dvh;
-		max-width: none;
-		max-height: none;
-		margin: 0;
-		padding: 0;
-		border: 0;
-		background: rgb(10 12 10 / 0.95);
-		opacity: 0;
-		transform: scale(0.96);
-		transition:
-			opacity 200ms var(--ease-out),
-			transform 200ms var(--ease-out),
-			display 200ms allow-discrete,
-			overlay 200ms allow-discrete;
-	}
-	.lightbox[open] {
-		opacity: 1;
-		transform: none;
-	}
-	@starting-style {
-		.lightbox[open] {
-			opacity: 0;
-			transform: scale(0.96);
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.lightbox,
-		.lightbox[open] {
-			transform: none;
-		}
 	}
 </style>
 

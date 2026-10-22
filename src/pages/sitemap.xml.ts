@@ -3,7 +3,6 @@ import { NAV } from "../content/site";
 import { getHouseTypes } from "../lib/cms";
 import { siteOrigin } from "../lib/seo";
 
-// Replaces EmDash's built-in sitemap, which only lists CMS collections: most pages here are code.
 export const GET: APIRoute = async ({ url, cache }) => {
 	const origin = siteOrigin(url);
 	const houses = await getHouseTypes(cache);

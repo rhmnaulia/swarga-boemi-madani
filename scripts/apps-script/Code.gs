@@ -1,9 +1,3 @@
-/**
- * Penerima leads website Swarga Boemi Madani.
- * Website mengirim setiap klik WhatsApp dan form survei ke sini, lalu dicatat di sheet "Leads".
- * Cara pasang: lihat README.md di folder yang sama.
- */
-
 var COLUMNS = [
 	["Waktu", "timestamp"],
 	["Jenis", "event"],
@@ -23,7 +17,6 @@ var COLUMNS = [
 
 var EVENT_LABELS = { wa_click: "Klik WhatsApp", form_survei: "Form survei" };
 
-/** Dipanggil oleh website. Menolak request tanpa secret yang benar. */
 function doPost(e) {
 	var data;
 	try {
@@ -60,15 +53,10 @@ function doPost(e) {
 	return reply({ ok: true });
 }
 
-/** Buka URL web app di browser untuk memastikan sudah aktif. */
 function doGet() {
 	return reply({ ok: true, service: "leads" });
 }
 
-/**
- * Jalankan sekali dari editor (pilih "setup" lalu Run).
- * Membuat sheet "Leads" dan "Ringkasan". Aman dijalankan ulang: data leads tidak dihapus.
- */
 function setup() {
 	var ss = SpreadsheetApp.getActiveSpreadsheet();
 	ss.setSpreadsheetTimeZone("Asia/Jakarta");
@@ -115,13 +103,11 @@ function reply(obj) {
 	);
 }
 
-/** Teks apa adanya. Awalan =, +, -, @ dinetralkan supaya tidak dibaca sebagai rumus. */
 function cell(value) {
 	var s = value == null ? "" : String(value).slice(0, 500);
 	return /^[=+\-@]/.test(s) ? "'" + s : s;
 }
 
-/** Nomor 628… jadi tautan yang bisa langsung diklik admin, ditampilkan sebagai 08…. */
 function waLink(value) {
 	var n = value == null ? "" : String(value);
 	if (!/^628\d{7,12}$/.test(n)) return "";

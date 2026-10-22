@@ -4,8 +4,6 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-02-24",
 	"compatibility_flags": ["nodejs_compat"],
-	// Resource IDs from `wrangler d1 create` / `wrangler kv namespace create`. These point at the
-	// developer's personal account (temporary, workers.dev); replace them at handover. See README "Deploy".
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -28,11 +26,7 @@
 	"images": {
 		"binding": "IMAGES",
 	},
-	// No "worker_loaders" (LOADER): phase 1 uses no sandboxed/marketplace plugins.
-	// Cron drives scheduled publishing and EmDash maintenance.
 	"triggers": {
 		"crons": ["* * * * *"],
 	},
-	// Custom domain goes here at M4, once decided and moved to the client's Cloudflare account:
-	// "routes": [{ "pattern": "example.com", "custom_domain": true }],
 }

@@ -1,9 +1,10 @@
 ---
 import Gallery from "../../components/Gallery.astro";
 import Icon from "../../components/Icon.astro";
-import Media from "../../components/Media.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 import WaButton from "../../components/WaButton.astro";
+import ZoomImage from "../../components/ZoomImage.astro";
+import { BROSUR_TIPE, FOTO, FOTO_TIPE, FOTO_ALT } from "../../content/foto";
 import { BEBAS_BIAYA } from "../../content/keunggulan";
 import Base from "../../layouts/Base.astro";
 import { getHouseType, getHouseTypes } from "../../lib/cms";
@@ -27,12 +28,18 @@ const wa: WaContext = {
 const photos = [d.foto_utama, ...(d.galeri ?? []).map((g) => g.foto)].filter(
 	(p): p is NonNullable<typeof p> => Boolean(p),
 );
+const bawaan = FOTO_TIPE[house.id];
+const brosur = BROSUR_TIPE[house.id];
+const denahSize = d.denah?.width ? d.denah : bawaan && FOTO[bawaan.denah];
+const denahRatio = denahSize && (denahSize.width ?? 0) > (denahSize.height ?? 0) ? "4/3" : "3/4";
 const habis = d.ketersediaan === "habis";
 const surveyHref = `/kontak?minat=${encodeURIComponent(`Rumah tipe ${d.nama}`)}#survei`;
 
 const description = `Rumah tipe ${d.nama} ${tipe} di Swarga Boemi Madani, Gombong: ${d.kamar_tidur} kamar tidur, ${d.kamar_mandi} kamar mandi, ${lantaiLabel(d.lantai)}, listrik ${d.listrik}. Lihat denah, spesifikasi, dan sisa unit.`;
 const origin = siteOrigin(Astro.url);
-const image = d.foto_utama?.src ? new URL(d.foto_utama.src, origin).href : undefined;
+const imageSrc =
+	d.foto_utama?.src ?? (bawaan && `/foto/${bawaan.foto}-${FOTO[bawaan.foto].width}.webp`);
+const image = imageSrc ? new URL(imageSrc, origin).href : undefined;
 const jsonLd = houseLd(origin, {
 	nama: d.nama,
 	slug: house.id,
@@ -44,8 +51,6 @@ const jsonLd = houseLd(origin, {
 });
 
 const facts = [
-	{ icon: "area", label: "Luas bangunan", value: `${d.luas_bangunan} m²` },
-	{ icon: "area", label: "Luas tanah", value: `${d.luas_tanah} m²` },
 	{ icon: "stairs", label: "Lantai", value: lantaiLabel(d.lantai) },
 	{ icon: "bed", label: "Kamar tidur", value: d.kamar_tidur },
 	{ icon: "bath", label: "Kamar mandi", value: d.kamar_mandi },
@@ -74,7 +79,11 @@ const facts = [
 
 	<section class="container-page grid gap-8 pt-2 pb-12 md:pb-16 lg:grid-cols-[1.3fr_1fr] lg:gap-12">
 		<div class="min-w-0">
-			<Gallery images={photos} alt={`Rumah tipe ${d.nama} ${tipe}`} />
+			<Gallery
+				images={photos}
+				alt={`Rumah tipe ${d.nama} ${tipe}`}
+				fallback={bawaan && [bawaan.foto, ...bawaan.galeri]}
+			/>
 		</div>
 
 		<div>
@@ -93,7 +102,7 @@ const facts = [
 
 			<p class="border-line mt-5 border-t pt-5 text-2xl font-extrabold">{hargaLabel(d)}</p>
 
-			<dl class="mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3">
+			<dl class="mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4 lg:grid-cols-2">
 				{facts.map((f) => (
 					<div>
 						<dt class="text-muted flex items-center gap-1.5 text-sm">
@@ -126,13 +135,15 @@ const facts = [
 		<div class="container-page grid gap-10 lg:grid-cols-2">
 			<div>
 				<h2 class="text-2xl">Denah</h2>
-				<Media
+				<ZoomImage
 					image={d.denah}
+					fallback={bawaan?.denah}
+					fit="contain"
 					alt={`Denah rumah tipe ${d.nama} ${tipe}`}
-					ratio="3/4"
+					ratio={denahRatio}
 					placeholder="Denah menyusul"
 					sizes="(min-width: 64rem) 36rem, 100vw"
-					class="border-line mt-4 border bg-white"
+					class:list={["mt-4", denahRatio === "3/4" && "max-w-sm"]}
 				/>
 			</div>
 
@@ -166,6 +177,21 @@ const facts = [
 								))}
 							</tbody>
 						</table>
+					</div>
+				)}
+				{brosur && (
+					<div>
+						<h2 class="text-2xl">Brosur</h2>
+						<ZoomImage
+							fallback={brosur}
+							alt={FOTO_ALT[brosur]}
+							natural
+							sizes="(min-width: 64rem) 24rem, 100vw"
+							class="mt-4 max-w-sm"
+						/>
+						<p class="text-muted mt-2 max-w-sm text-sm">
+							Brosur 2022. Spesifikasi, bonus, dan harga terbaru tanyakan ke tim marketing.
+						</p>
 					</div>
 				)}
 			</div>

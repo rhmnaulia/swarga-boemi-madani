@@ -17,19 +17,12 @@ interface Props {
 	description?: string | null;
 	image?: string | null;
 	canonical?: string | null;
-	/** Pass content reference for plugin page contributions on content pages */
 	content?: { collection: string; id: string; slug?: string | null };
-	/** Message context for the WhatsApp action dock. */
 	wa?: WaContext;
-	/** Page has a `[data-hero]` with its own CTAs; the dock appears after it. */
 	dockAfterHero?: boolean;
-	/** Survey link in the dock; `null` swaps it for a phone call (contact page). */
 	surveyHref?: string | null;
-	/** Hide the dock on pages that are themselves the next step (thank-you). */
 	dock?: boolean;
-	/** Structured data for this page (schema.org objects). */
 	jsonLd?: unknown[];
-	/** Add the business (HomeAndConstructionBusiness) structured data. */
 	business?: boolean;
 }
 
@@ -56,7 +49,6 @@ const settings = settingsResult.data;
 const siteTitle = settings?.title ?? PROJECT_NAME;
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const pageDescription = description ?? settings?.tagline ?? null;
-// Absolute URLs on the public origin; the query string never makes a separate page.
 const origin = siteOrigin(Astro.url);
 const pageCanonical = canonical ?? `${origin}${Astro.url.pathname}`;
 const pageImage = new URL(image ?? OG_IMAGE, origin).href;
@@ -84,9 +76,6 @@ const pageCtx = createPublicPageContext({
 		<meta name="theme-color" content="#faf7f2" />
 		<title>{fullTitle}</title>
 		<script is:inline>
-			// Fades `.reveal` blocks in as they scroll into view. Only blocks below the fold are ever
-			// hidden: what is on screen at load shows at once, so it does not appear a second time
-			// after the page transition. Inline so a failed script download never hides content.
 			document.documentElement.classList.add("js");
 			document.addEventListener("DOMContentLoaded", function () {
 				if (!("IntersectionObserver" in window)) return;
@@ -108,7 +97,7 @@ const pageCtx = createPublicPageContext({
 				});
 			});
 		</script>
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		{structured.map((data) => (
@@ -138,7 +127,6 @@ const pageCtx = createPublicPageContext({
 		<Footer pengaturan={pengaturan} />
 		{dock && (
 			<>
-				{/* Room for the mobile dock under the footer, in the footer colour. */}
 				<div
 					class="bg-brand-green-dark h-[calc(4.5rem+env(safe-area-inset-bottom))] lg:hidden"
 					aria-hidden="true"

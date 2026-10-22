@@ -1,5 +1,3 @@
-// From the client's discovery answers (Oct 2026), question 8.
-// TODO(data): booking fee, partner banks for KPR, cash schemes, and typical duration.
 export const ALUR_BELI = [
 	{
 		title: "Tanya via WhatsApp",

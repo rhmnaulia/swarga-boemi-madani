@@ -1,17 +1,11 @@
 import { ADDRESS, COMPANY, PROJECT_NAME, TAGLINE, WA_TEL } from "../content/site";
 import { GEO } from "../content/lokasi";
 
-/**
- * Public origin for canonical URLs, sitemap and JSON-LD. `EMDASH_SITE_URL` once the final domain is
- * set (M4), else the request's own origin. Never hardcoded.
- */
 export function siteOrigin(url: URL): string {
 	const configured = typeof process !== "undefined" ? process.env?.EMDASH_SITE_URL : undefined;
 	try {
 		if (configured) return new URL(configured).origin;
-	} catch {
-		// Malformed value: fall back to the request.
-	}
+	} catch {}
 	return url.origin;
 }
 
@@ -27,7 +21,6 @@ const address = {
 
 type Social = { instagram?: string; tiktok?: string; facebook?: string; youtube?: string } | null;
 
-/** The developer and contractor, for the home and contact pages. */
 export function businessLd(origin: string, social: Social) {
 	const sameAs = [social?.instagram, social?.tiktok, social?.facebook, social?.youtube].filter(
 		(u): u is string => Boolean(u),
@@ -55,14 +48,12 @@ interface HouseLd {
 	description: string;
 	image?: string;
 	luasBangunan: number;
-	/** CMS text such as "3" or "4+1"; only a plain number goes into structured data. */
 	kamarTidur: string;
 	kamarMandi: string;
 }
 
 const count = (s: string) => (/^\d+$/.test(s.trim()) ? Number(s) : undefined);
 
-/** One house type, plus its breadcrumb. */
 export function houseLd(origin: string, h: HouseLd) {
 	const url = `${origin}/tipe-rumah/${h.slug}`;
 	return [
@@ -91,7 +82,6 @@ export function houseLd(origin: string, h: HouseLd) {
 	];
 }
 
-/** JSON for a `<script type="application/ld+json">`; `<` is escaped so content cannot close the tag. */
 export function ldJson(data: unknown): string {
 	return JSON.stringify(data).replace(/</g, "\\u003c");
 }

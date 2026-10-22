@@ -1,7 +1,6 @@
 import { getEmDashCollection, getEmDashEntry } from "emdash";
 import type { CacheHint } from "emdash";
 
-/** `Astro.cache`; pass it so publishing in the admin invalidates cached pages. */
 type RouteCache = { enabled: boolean; set(hint: CacheHint): void } | undefined;
 
 function remember(cache: RouteCache, hint: CacheHint | undefined) {
@@ -43,7 +42,6 @@ export async function getProgress(cache?: RouteCache) {
 	return entries;
 }
 
-/** Only testimonials with written permission (izin tertulis) may ever be shown. */
 export async function getTestimonials(cache?: RouteCache) {
 	const { entries, cacheHint } = await getEmDashCollection("testimonial");
 	remember(cache, cacheHint);

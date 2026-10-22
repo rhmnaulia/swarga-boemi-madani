@@ -4,14 +4,9 @@ import { getPengaturan } from "../lib/cms";
 import { buildWaLink, type WaContext } from "../lib/wa";
 import Icon from "./Icon.astro";
 
-// Phones: a bottom dock with the two actions that matter, which reserves its own space
-// (Base pads <body>) so it never covers content. Desktop: a small floating WhatsApp pill.
-
 interface Props {
 	ctx?: WaContext;
-	/** Keep hidden until the hero (`[data-hero]`) scrolls out; the hero has its own CTAs. */
 	afterHero?: boolean;
-	/** Where "Jadwalkan Survei" points; on the contact page the dock offers a phone call instead. */
 	surveyHref?: string | null;
 }
 
@@ -101,7 +96,6 @@ const secondary = "border-line bg-white text-ink";
 			transform 220ms var(--ease-out),
 			opacity 220ms var(--ease-out);
 	}
-	/* Leaves the way it came: down past the screen edge. */
 	.action-dock[data-hidden] {
 		transform: translateY(100%);
 	}

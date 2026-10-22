@@ -1,5 +1,6 @@
 ---
 import type { HouseType } from "../../emdash-env";
+import { FOTO_TIPE } from "../content/foto";
 import { hargaLabel, lantaiLabel } from "../lib/format";
 import Icon from "./Icon.astro";
 import Media from "./Media.astro";
@@ -9,7 +10,6 @@ interface Props {
 	slug: string;
 	house: HouseType;
 	priority?: boolean;
-	/** h2 when the cards sit directly under the page h1, h3 under a section heading. */
 	heading?: "h2" | "h3";
 	class?: string;
 	style?: string;
@@ -36,6 +36,7 @@ const {
 	<div class="relative">
 		<Media
 			image={h.foto_utama}
+			fallback={FOTO_TIPE[slug]?.foto}
 			alt={`Rumah tipe ${h.nama} ${h.luas_bangunan}/${h.luas_tanah}`}
 			ratio="4/3"
 			sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 85vw"

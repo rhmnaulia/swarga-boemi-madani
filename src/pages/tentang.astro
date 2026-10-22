@@ -1,6 +1,8 @@
 ---
 import Icon from "../components/Icon.astro";
 import PageHeader from "../components/PageHeader.astro";
+import PhotoGrid from "../components/PhotoGrid.astro";
+import Photo from "../components/Photo.astro";
 import WaButton from "../components/WaButton.astro";
 import {
 	LEGALITAS_PERUSAHAAN,
@@ -9,7 +11,22 @@ import {
 	PENDIRI,
 	PROFIL,
 } from "../content/tentang";
+import type { FotoKey } from "../content/foto";
 import Base from "../layouts/Base.astro";
+
+const SERAH_TERIMA: FotoKey[] = ["akad-serah-terima", "akad-jual-beli", "tmo", "goody-bag"];
+const KEGIATAN: FotoKey[] = [
+	"rei-academy",
+	"rei-pertemuan",
+	"rei-balaikota",
+	"rei-diklat-pajak",
+	"presentasi-1",
+	"presentasi-2",
+	"presentasi-3",
+	"presentasi-4",
+	"presentasi-5",
+	"presentasi-6",
+];
 ---
 
 <Base
@@ -24,12 +41,15 @@ import Base from "../layouts/Base.astro";
 				<p>{p}</p>
 			))}
 		</div>
-		<div class="bg-brand-green-soft self-start rounded-(--radius-card) p-5">
-			<Icon name="badge" class="text-brand-green size-8" />
-			<p class="mt-2 text-lg font-bold">Anggota REI</p>
-			<p class="text-brand-green-dark">
-				Real Estat Indonesia, NPA 02-01085. Akad jual beli dilakukan di notaris.
-			</p>
+		<div class="space-y-5 self-start">
+			<Photo foto="logo-asbm" sizes="16rem" class="w-56 rounded-(--radius-card)" />
+			<div class="bg-brand-green-soft rounded-(--radius-card) p-5">
+				<Icon name="badge" class="text-brand-green size-8" />
+				<p class="mt-2 text-lg font-bold">Anggota REI</p>
+				<p class="text-brand-green-dark">
+					Real Estat Indonesia, NPA 02-01085. Akad jual beli dilakukan di notaris.
+				</p>
+			</div>
 		</div>
 	</section>
 
@@ -66,6 +86,28 @@ import Base from "../layouts/Base.astro";
 			</div>
 		</section>
 	)}
+
+	<section class="bg-sand py-12 md:py-16">
+		<div class="container-page">
+			<h2 class="text-2xl md:text-3xl">Dari akad sampai serah terima</h2>
+			<p class="text-muted mt-2 max-w-xl">
+				Akad di notaris, serah terima kunci, dan Town Management Office kami.
+			</p>
+		</div>
+		<div class="container-page mt-6 md:mt-8">
+			<PhotoGrid fotos={SERAH_TERIMA} cols={4} />
+		</div>
+	</section>
+
+	<section class="py-12 md:py-16">
+		<div class="container-page">
+			<h2 class="text-2xl md:text-3xl">Kegiatan kami</h2>
+			<p class="text-muted mt-2 max-w-xl">
+				Aktif di Real Estat Indonesia dan rutin presentasi ke instansi serta sekolah.
+			</p>
+			<PhotoGrid fotos={KEGIATAN} cols={4} class="mt-6 md:mt-8" />
+		</div>
+	</section>
 
 	<section class="border-line border-t py-12 md:py-16">
 		<div class="container-page grid gap-10 lg:grid-cols-2">

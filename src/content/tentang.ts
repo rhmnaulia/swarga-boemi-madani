@@ -3,12 +3,10 @@ export const PROFIL = [
 	"Swarga Boemi Madani Residence di Gombong adalah proyek perumahan kami: perumahan cluster, ruko, dan fasilitas pendukungnya. Selain membangun perumahan sendiri, kami juga melayani jasa konstruksi untuk pihak lain di beberapa kota.",
 ];
 
-// TODO(data): short bio (and photo, if allowed).
 export const PENDIRI: { name: string; role: string; bio?: string }[] = [
 	{ name: "Andyka Setyabudi Haryanto, S.T.", role: "Pendiri PT ASBM" },
 ];
 
-// TODO(data): what each letter of the CARE values stands for. Section is hidden until filled.
 export const NILAI_CARE: { letter: string; word: string; text: string }[] = [];
 
 export const LEGALITAS_PERUSAHAAN = [

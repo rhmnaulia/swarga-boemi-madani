@@ -149,8 +149,8 @@ The SESSION KV binding is added automatically by the Astro Cloudflare adapter.
   EmDash's built-in sitemap, which only lists collections. `/robots.txt` is EmDash's (blocks `/_emdash/`).
 - JSON-LD: `HomeAndConstructionBusiness` on `/` and `/kontak`, `SingleFamilyResidence` + breadcrumb on each house
   type (`src/lib/seo.ts`). Add `GEO` in `src/content/lokasi.ts` once the coordinates are confirmed.
-- `public/og.png`, `favicon.svg/ico` and `apple-touch-icon.png` are placeholders built from the site colors.
-  TODO(data): replace with the real logo. A house type with `foto_utama` uses that photo as its share image.
+- `public/og.png` shows the logo and the finished Granada unit. A house type uses its `foto_utama`, or its
+  bundled photo, as its share image.
 - Pages are cached at Cloudflare's edge (`cache` + `routeRules` in `astro.config.mjs`: 5 min, then
   stale-while-revalidate 1 h). EmDash purges the affected pages by tag when content is published, including
   scheduled publishing by the cron, so admin edits still show at once. The editor toolbar runs in `client` mode
@@ -160,7 +160,7 @@ The SESSION KV binding is added automatically by the Astro Cloudflare adapter.
 
 Lighthouse mobile, local production build (`pnpm build && pnpm preview`), Oct 2026, placeholder images:
 Performance 98-100, Accessibility 100, Best Practices 100, SEO 100 on every page; home at 6x CPU slowdown:
-Performance 99. Re-run after real photos are uploaded.
+Performance 99. Re-run now that the bundled photos are in.
 
 ## Cloudflare free-tier quotas
 
@@ -174,6 +174,26 @@ Checked from Cloudflare docs when writing this (Oct 2026). Re-check on the dashb
 | KV               | 100k reads/day, 1,000 writes/day, 1 GB                         | Cache writes on misses, well below |
 | Images (binding) | 5,000 unique transformations/month                             | Few hundred image variants         |
 
+## Photos
+
+The client's photo folder `SBM_Foto_Website/` (logo, renders, brochures, progress, handover, REI activities)
+stays out of git. `pnpm foto` (`scripts/foto.mjs`) turns it into what the site ships:
+
+- `public/foto/*.webp` in 480/960/1440 px widths, sizes in `src/content/foto.json`. Brochures, banners and
+  photos are shown whole (photo grids keep each photo's proportions; tap to enlarge). Only the house-type
+  card photos and floor plans are cut out of the 2022 brochures, because those exist nowhere else; the full
+  brochure sits on the same page. Buyers' faces and names are left out: the ground-breaking photo is not
+  used, and the QC photo is cropped above the buyers' names. `render_granada_dan_cordoba.jpg` is not used
+  because it shows 2022 prices.
+- `public/logo-sbm.png` (header logo), `favicon.ico`, `favicon-96.png`, `apple-touch-icon.png`.
+
+`src/content/foto.ts` holds alt text and the defaults per house type. Bundled photos only fill empty spots: a
+photo uploaded in the admin (house type photo, gallery, floor plan, progress update, logo in Settings > General)
+replaces them. The progress page shows the field photos until the first progress update is published.
+
+When the full-resolution originals arrive, put them in `SBM_Foto_Website/` under the same names and run
+`pnpm foto` again. Crops scale with the image size.
+
 ## Handover
 
 Analytics and leads are set up only after the client agrees. The full go-live and handover checklist is in
@@ -181,11 +201,8 @@ Analytics and leads are set up only after the client agrees. The full go-live an
 
 ## Data menyusul
 
-Search `TODO(data)` for every placeholder. Seed data that is still placeholder (JSON has no comments):
+Placeholders waiting for client data are listed in [docs/todo.md](docs/todo.md). The code has no comments,
+so that list is the only place they are tracked.
 
-- `house_type`: no `harga`, no `sisa_unit`, no photos. Granada `sisa-sedikit`, others `tersedia`.
-- `construction_project`: 2 example entries with `tampilkan: false`.
-- `testimonial`: 1 example entry with `izin_tertulis: false`.
-- `pengaturan`: only WhatsApp and address; email and social links are empty.
-- Brand colors in `src/styles/global.css` are sampled from a logo image in the discovery PDF; confirm against
-  the source logo file.
+- Brand colors in `src/styles/global.css` match the logo file (`logo_SBM_transparan.png`: green #087c3c,
+  orange #f88c48), darkened where text contrast needs it.

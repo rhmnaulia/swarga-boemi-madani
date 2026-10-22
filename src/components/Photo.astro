@@ -1,0 +1,34 @@
+---
+import { FOTO, FOTO_ALT, type FotoKey } from "../content/foto";
+
+interface Props {
+	foto: FotoKey;
+	alt?: string;
+	sizes?: string;
+	priority?: boolean;
+	class?: string;
+}
+
+const {
+	foto,
+	alt = FOTO_ALT[foto],
+	sizes = "100vw",
+	priority = false,
+	class: className,
+} = Astro.props;
+const { width, height, widths } = FOTO[foto];
+const url = (w: number) => `/foto/${foto}-${w}.webp`;
+---
+
+<img
+	src={url(width)}
+	srcset={widths.map((w) => `${url(w)} ${w}w`).join(", ")}
+	sizes={sizes}
+	width={width}
+	height={height}
+	alt={alt}
+	loading={priority ? "eager" : "lazy"}
+	fetchpriority={priority ? "high" : undefined}
+	decoding="async"
+	class={className}
+/>

@@ -1,6 +1,5 @@
 import { siFacebook, siInstagram, siTiktok, siWhatsapp, siYoutube } from "simple-icons";
 
-// Line icons: 24px grid, drawn with stroke (see Icon.astro). One stroke weight across the set.
 export const LINE_ICONS = {
 	gate: "M3 21V8l4-3 4 3v13M13 21V8l4-3 4 3v13M7 12v4M17 12v4M11 11h2M2 21h20",
 	shield: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5",
@@ -29,9 +28,10 @@ export const LINE_ICONS = {
 	hammer: "M14 7l-9.5 9.5a2 2 0 002.8 2.8L16.8 9.9M14 7l2-2 5 5-2 2-1.2-1.2M14 7l2.8 2.9",
 	doc: "M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6",
 	home: "M3 11l9-7 9 7M5 9.5V21h14V9.5M10 21v-6h4v6",
+	"zoom-in": "M10.5 17a6.5 6.5 0 100-13 6.5 6.5 0 000 13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5",
+	"zoom-out": "M10.5 17a6.5 6.5 0 100-13 6.5 6.5 0 000 13zM15.5 15.5L20 20M8 10.5h5",
 } as const;
 
-// Brand glyphs: filled paths from simple-icons.
 export const BRAND_ICONS = {
 	whatsapp: siWhatsapp.path,
 	instagram: siInstagram.path,

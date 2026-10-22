@@ -1,9 +1,11 @@
 ---
 import Icon from "../components/Icon.astro";
 import MapEmbed from "../components/MapEmbed.astro";
-import Media from "../components/Media.astro";
 import PageHeader from "../components/PageHeader.astro";
+import PhotoGrid from "../components/PhotoGrid.astro";
 import WaButton from "../components/WaButton.astro";
+import ZoomImage from "../components/ZoomImage.astro";
+import type { FotoKey } from "../content/foto";
 import { FASILITAS, PATOKAN } from "../content/lokasi";
 import { ADDRESS_LINE } from "../content/site";
 import Base from "../layouts/Base.astro";
@@ -11,12 +13,18 @@ import { getPengaturan } from "../lib/cms";
 
 const pengaturan = await getPengaturan(Astro.cache);
 
-// TODO(data): neighbourhood photos and the static masterplan image (put files in public/ or the CMS).
-const fotoLingkungan = [
-	"Gerbang utama perumahan",
-	"Jalan utama selebar 9 meter",
-	"Taman dan playground",
+const fotoLingkungan: FotoKey[] = [
+	"poster-pemandangan",
+	"kawasan-udara",
+	"alexandria-jalan",
+	"fasad-3-tipe",
 ];
+const captions = {
+	"poster-pemandangan": "Sawah dan gunung di sekitar lokasi",
+	"kawasan-udara": "Kawasan dari udara (ilustrasi)",
+	"alexandria-jalan": "Jalan di Cluster Alexandria (ilustrasi)",
+	"fasad-3-tipe": "Fasad tipe Granada, Andalusia, dan Alexandria (ilustrasi)",
+};
 ---
 
 <Base
@@ -61,26 +69,24 @@ const fotoLingkungan = [
 			</div>
 			<div>
 				<h2 class="text-2xl md:text-3xl">Masterplan</h2>
-				<Media
-					alt="Masterplan kawasan Swarga Boemi Madani Residence"
-					ratio="4/3"
-					placeholder="Gambar masterplan menyusul"
-					class="mt-6 bg-white"
+				<ZoomImage
+					fallback="brosur-masterplan"
+					alt="Brosur masterplan, peta lokasi, dan fasilitas Swarga Boemi Madani"
+					natural
+					sizes="(min-width: 64rem) 36rem, 100vw"
+					class="mt-6"
 				/>
+				<p class="text-muted mt-2 text-sm">
+					Warna kavling di masterplan: kuning Alexandria, biru Andalusia, merah muda Granada, hijau
+					Cordoba.
+				</p>
 			</div>
 		</div>
 	</section>
 
 	<section class="container-page py-12 md:py-16">
 		<h2 class="text-2xl md:text-3xl">Suasana lingkungan</h2>
-		<ul class="mt-6 md:mt-8 grid gap-4 sm:grid-cols-3">
-			{fotoLingkungan.map((alt, i) => (
-				<li class="reveal" style={`--i: ${i}`}>
-					<Media alt={alt} ratio="4/3" sizes="(min-width: 40rem) 33vw, 100vw" />
-					<p class="text-muted mt-2 text-sm">{alt}</p>
-				</li>
-			))}
-		</ul>
+		<PhotoGrid fotos={fotoLingkungan} {captions} cols={2} class="mt-6 md:mt-8" />
 		<div class="mt-10 flex flex-col gap-3 sm:flex-row">
 			<a
 				href="/kontak#survei"

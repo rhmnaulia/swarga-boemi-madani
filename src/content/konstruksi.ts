@@ -1,4 +1,3 @@
-// TODO(data): confirm the service list with the client.
 export const LAYANAN = [
 	{
 		title: "Bangun rumah baru",
@@ -14,10 +13,8 @@ export const LAYANAN = [
 	},
 ];
 
-// TODO(data): actual cities served.
 export const KOTA_LAYANAN = ["Gombong", "Kebumen", "dan sekitarnya"];
 
-// TODO(data): confirm the real working steps with the client.
 export const ALUR = [
 	{ title: "Konsultasi", text: "Ceritakan kebutuhan dan anggaran lewat WhatsApp." },
 	{ title: "Survei lokasi", text: "Tim kami melihat lahan atau bangunan yang ada." },

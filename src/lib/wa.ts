@@ -15,7 +15,6 @@ export function waMessage(ctx: WaContext): string {
 		case "konstruksi":
 			return "Halo, saya ingin konsultasi jasa konstruksi.";
 		case "survei": {
-			// The person's name is not passed along: it would end up in URLs and analytics.
 			const minat =
 				ctx.minat && ctx.minat !== "Lainnya"
 					? ` untuk ${ctx.minat[0].toLowerCase()}${ctx.minat.slice(1)}`
@@ -27,7 +26,6 @@ export function waMessage(ctx: WaContext): string {
 	}
 }
 
-/** `number` is the CMS value (pengaturan.whatsapp); falls back to the marketing number. */
 export function buildWaLink(ctx: WaContext, number?: string | null): string {
 	const to = number && /^628\d{7,12}$/.test(number) ? number : WA_FALLBACK;
 	return `https://wa.me/${to}?text=${encodeURIComponent(waMessage(ctx))}`;

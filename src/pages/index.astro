@@ -23,7 +23,6 @@ const sisa = pengaturan?.total_sisa_unit;
 	dockAfterHero
 	business
 >
-	<!-- Hero: forest band, edge-to-edge photo, hills hand over to the cream page -->
 	<section data-hero class="bg-brand-green-dark text-paper relative overflow-hidden">
 		<div class="container-page relative z-10 grid gap-10 pt-10 md:pt-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-0">
 			<div class="pb-2 lg:pt-14 lg:pb-36">
@@ -56,11 +55,10 @@ const sisa = pengaturan?.total_sisa_unit;
 				)}
 			</div>
 
-			<!-- Photo bleeds to the viewport edge: full width on phones, to the right edge on desktop. -->
 			<div class="hero-photo relative -mx-4 md:-mx-8 lg:mx-0 lg:self-stretch">
-				<!-- TODO(data): hero photo (real finished unit preferred over render). -->
 				<Media
 					alt="Tampak depan rumah di Swarga Boemi Madani Residence"
+					fallback="granada-unit"
 					ratio="4/3"
 					priority
 					placeholder="Foto unit menyusul"
@@ -76,7 +74,6 @@ const sisa = pengaturan?.total_sisa_unit;
 		/>
 	</section>
 
-	<!-- Tipe rumah -->
 	<section id="tipe" class="py-12 md:py-16">
 		<div class="container-page">
 			<div class="flex flex-wrap items-end justify-between gap-3">
@@ -104,7 +101,6 @@ const sisa = pengaturan?.total_sisa_unit;
 		</div>
 	</section>
 
-	<!-- Keunggulan: second dark band, items read as a ruled list -->
 	<section class="bg-brand-green-dark text-paper">
 		<Hills color="var(--color-paper)" back="var(--color-moss)" class="h-8 rotate-180 md:h-12" />
 		<div class="container-page py-12 md:py-16">
@@ -130,7 +126,6 @@ const sisa = pengaturan?.total_sisa_unit;
 		<Hills color="var(--color-paper)" back="var(--color-moss)" class="h-8 md:h-12" flip />
 	</section>
 
-	<!-- QC & material -->
 	<section class="container-page grid gap-10 py-12 md:py-16 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
 		<div>
 			<h2 class="text-3xl md:text-4xl">Dicek bersama sebelum serah terima</h2>
@@ -158,16 +153,29 @@ const sisa = pengaturan?.total_sisa_unit;
 				Lihat progres pembangunan <Icon name="arrow" class="size-4" />
 			</a>
 		</div>
-		<div class="bg-brand-green-soft self-start rounded-(--radius-card) p-6">
-			<p class="text-brand-green-dark text-lg font-extrabold">Material yang kami pakai</p>
-			<dl class="mt-3 divide-y divide-(--color-sage)">
-				{MATERIAL.map((m) => (
-					<div class="flex justify-between gap-4 py-3.5">
-						<dt class="text-muted">{m.part}</dt>
-						<dd class="text-brand-green-dark text-right font-bold">{m.brand}</dd>
-					</div>
-				))}
-			</dl>
+		<div class="space-y-6 self-start">
+			<figure>
+				<Media
+					alt="Pembeli dan tim QC memeriksa rumah sebelum serah terima"
+					fallback="qc-inspeksi"
+					ratio="4/5"
+					sizes="(min-width: 64rem) 30rem, 100vw"
+				/>
+				<figcaption class="text-muted mt-2 text-sm">
+					Inspeksi bersama pembeli sebelum kunci diserahkan.
+				</figcaption>
+			</figure>
+			<div class="bg-brand-green-soft rounded-(--radius-card) p-6">
+				<p class="text-brand-green-dark text-lg font-extrabold">Material yang kami pakai</p>
+				<dl class="mt-3 divide-y divide-(--color-sage)">
+					{MATERIAL.map((m) => (
+						<div class="flex justify-between gap-4 py-3.5">
+							<dt class="text-muted">{m.part}</dt>
+							<dd class="text-brand-green-dark text-right font-bold">{m.brand}</dd>
+						</div>
+					))}
+				</dl>
+			</div>
 		</div>
 	</section>
 
@@ -201,7 +209,6 @@ const sisa = pengaturan?.total_sisa_unit;
 		</section>
 	)}
 
-	<!-- Jasa konstruksi: the one band that carries the star tile -->
 	<section class="container-page pb-12 md:pb-16">
 		<div class="bg-brand-green-soft tile-pattern grid items-center gap-6 rounded-(--radius-card) p-6 md:grid-cols-[1.5fr_1fr] md:p-10">
 			<div>
@@ -224,7 +231,6 @@ const sisa = pengaturan?.total_sisa_unit;
 		</div>
 	</section>
 
-	<!-- CTA akhir -->
 	<section class="container-page pb-16 text-center md:pb-20">
 		<h2 class="text-3xl md:text-4xl">Lihat langsung rumahnya</h2>
 		<p class="text-muted mx-auto mt-3 max-w-lg">
@@ -244,7 +250,6 @@ const sisa = pengaturan?.total_sisa_unit;
 
 <style>
 	@media (width >= 64rem) {
-		/* Extend past the container's right padding and the centered gutter. */
 		.hero-photo {
 			margin-right: calc(-1 * (max(0px, (100vw - 72rem) / 2) + 2rem));
 		}

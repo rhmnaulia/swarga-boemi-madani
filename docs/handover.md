@@ -46,8 +46,9 @@ The code is in place and dormant: no GA4 tag loads while `PUBLIC_GA4_ID` is empt
 - [ ] Admin setup on the final domain (passkeys are tied to the domain; workers.dev passkeys do not carry over).
 - [ ] Email for magic-link login: `cloudflareEmail` plugin + verified sender on the final domain.
 - [ ] Invite the owner as **Admin** and the daily admin as **Penyunting**. Each registers a backup passkey.
-- [ ] Logo uploaded (Pengaturan > Umum); replace `public/og.png`, `favicon.*`, `apple-touch-icon.png`
-      (`TODO(data)`), brand colors from the logo in `src/styles/global.css`.
+- [ ] Full-resolution photos from the client: replace the files in `SBM_Foto_Website/`, run `pnpm foto`,
+      redeploy (README "Photos"). Ask for written permission before using photos with buyers' faces (e.g.
+      the ground-breaking photo).
 - [ ] `GEO` coordinates in `src/content/lokasi.ts`.
 
 ## E. Verify, hand over, clean up

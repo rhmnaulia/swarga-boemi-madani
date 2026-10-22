@@ -2,15 +2,10 @@
 @import "@fontsource-variable/plus-jakarta-sans";
 
 @theme {
-	/* From the logo: green #087c3c, roof orange #f88c48 (sampled; swap for the source file's hex).
-	   Roles: forest = dark anchor, green = links/icons, sage = soft surface, orange = primary CTA
-	   only. Green and CTA orange are a shade darker than the logo so every text pair passes WCAG AA;
-	   the logo orange itself (orange-light) only sits on forest. */
 	--color-brand-green: #087539;
 	--color-brand-green-dark: #1c3a29;
 	--color-brand-green-soft: #e3ebdf;
 	--color-sage: #b9cdb3;
-	/* Far hill ridge where a forest band meets the cream page: muted, so it never reads as a stripe. */
 	--color-moss: #2e6a3f;
 	--color-brand-orange: #b9561f;
 	--color-brand-orange-dark: #9a4518;
@@ -35,7 +30,6 @@
 
 @layer base {
 	html {
-		/* Shows through between the outgoing and incoming page during a view transition. */
 		background: var(--color-paper);
 		-webkit-text-size-adjust: 100%;
 		-webkit-tap-highlight-color: transparent;
@@ -73,12 +67,10 @@
 	}
 }
 
-/* Faint 8-point star tile, after the Andalusian cluster names. Use on one band only. */
 @utility tile-pattern {
 	background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2764%27 height=%2764%27%3E%3Cg fill=%27none%27 stroke=%27%231c3a29%27 stroke-opacity=%27.06%27 stroke-width=%271.2%27%3E%3Crect x=%2722%27 y=%2722%27 width=%2720%27 height=%2720%27/%3E%3Crect x=%2722%27 y=%2722%27 width=%2720%27 height=%2720%27 transform=%27rotate(45 32 32)%27/%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Pressable feedback: confirms the tap on touch screens. */
 @utility pressable {
 	transition: transform 140ms var(--ease-out);
 	&:active {
@@ -86,8 +78,6 @@
 	}
 }
 
-/* One-time entrance for content below the fold. Hidden only when JS is running,
-   so content never depends on the script. */
 .reveal-pending {
 	opacity: 0;
 	transform: translateY(8px);
@@ -99,12 +89,6 @@
 	transition-delay: calc(var(--i, 0) * 50ms);
 }
 
-/*
- * Page-to-page transition (Chrome, Safari 18.2+; others just navigate).
- * Header, dock and WhatsApp pill are their own layers, so they stay put while the page changes.
- * The old page fades out fast and the new one rises in after it, so the two never show as a
- * double image the way a plain cross-fade does.
- */
 @view-transition {
 	navigation: auto;
 }
@@ -142,7 +126,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	/* Keep the fade (it softens the cut), drop the movement. */
 	@keyframes page-in {
 		from {
 			opacity: 0;
@@ -155,6 +138,40 @@
 		transition: opacity 200ms ease;
 	}
 	.pressable:active {
+		transform: none;
+	}
+}
+
+.lightbox {
+	width: 100vw;
+	height: 100dvh;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: rgb(10 12 10 / 0.95);
+	opacity: 0;
+	transform: scale(0.96);
+	transition:
+		opacity 200ms var(--ease-out),
+		transform 200ms var(--ease-out),
+		display 200ms allow-discrete,
+		overlay 200ms allow-discrete;
+}
+.lightbox[open] {
+	opacity: 1;
+	transform: none;
+}
+@starting-style {
+	.lightbox[open] {
+		opacity: 0;
+		transform: scale(0.96);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.lightbox,
+	.lightbox[open] {
 		transform: none;
 	}
 }

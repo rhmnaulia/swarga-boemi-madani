@@ -1,5 +1,5 @@
 ---
-import { NAV, SHORT_NAME, WA_DISPLAY, WA_TEL } from "../content/site";
+import { NAV, PROJECT_NAME, WA_DISPLAY, WA_TEL } from "../content/site";
 import Icon from "./Icon.astro";
 import WaButton from "./WaButton.astro";
 
@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { logo } = Astro.props;
+const LOGO_SIZE = { width: 473, height: 149 };
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 ---
@@ -18,17 +19,13 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 			href="/"
 			class="flex min-h-11 shrink-0 items-center gap-2 font-bold tracking-tight whitespace-nowrap"
 		>
-			{logo?.url ? (
-				<img src={logo.url} alt={logo.alt || SHORT_NAME} class="h-9 w-auto" />
-			) : (
-				// TODO(data): logo file. Admin can upload it in EmDash Settings > General.
-				<>
-					<span class="bg-brand-green-dark text-paper grid size-9 place-items-center rounded-[4px]">
-						<Icon name="home" class="size-5" />
-					</span>
-					<span class="leading-tight">{SHORT_NAME}</span>
-				</>
-			)}
+			<img
+				src={logo?.url || "/logo-sbm.png"}
+				alt={logo?.alt || PROJECT_NAME}
+				width={LOGO_SIZE.width}
+				height={LOGO_SIZE.height}
+				class="h-10 w-auto"
+			/>
 		</a>
 
 		<nav aria-label="Menu utama" class="hidden xl:block">
@@ -110,7 +107,6 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 </dialog>
 
 <style>
-	/* Phones: header slides away while reading down, returns on any upward scroll. */
 	.site-header {
 		transition: transform 220ms var(--ease-out);
 	}
@@ -134,7 +130,6 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 		}
 	}
 
-	/* Side sheet: enters and leaves along the same path, from the right edge. */
 	.nav-sheet {
 		margin: 0 0 0 auto;
 		width: min(20rem, 86vw);
@@ -208,7 +203,6 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 		},
 		{ passive: true },
 	);
-	// A keyboard user tabbing into the header must always see it.
 	header?.addEventListener("focusin", () => header.removeAttribute("data-hidden"));
 
 	const sheet = document.querySelector<HTMLDialogElement>("[data-nav]");
@@ -216,7 +210,6 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 	if (sheet && opener) {
 		opener.addEventListener("click", () => sheet.showModal());
 		sheet.querySelector("[data-nav-close]")?.addEventListener("click", () => sheet.close());
-		// Tap on the backdrop closes the sheet.
 		sheet.addEventListener("click", (e) => {
 			if (e.target === sheet) sheet.close();
 		});

@@ -5,7 +5,6 @@ import Base from "../layouts/Base.astro";
 import { getHouseTypes } from "../lib/cms";
 import { minatOptions } from "../lib/lead";
 
-// `?minat=` comes from /api/lead after a successful form post; it shapes the WhatsApp message.
 const houses = await getHouseTypes(Astro.cache);
 const raw = Astro.url.searchParams.get("minat");
 const minat = raw && minatOptions(houses.map((h) => h.data.nama)).includes(raw) ? raw : undefined;
@@ -37,7 +36,6 @@ const minat = raw && minatOptions(houses.map((h) => h.data.nama)).includes(raw) 
 </Base>
 
 <script>
-	// Count the form once in GA4, then drop the query so a reload does not count it again.
 	const params = new URLSearchParams(location.search);
 	const minat = params.get("minat");
 	if (minat !== null) {

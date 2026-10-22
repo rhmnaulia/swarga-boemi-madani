@@ -14,3 +14,7 @@ data.db-*
 .dev.vars
 .dev.vars.*
 !.dev.vars.example
+
+# Client photo originals (see scripts/foto.mjs)
+SBM_Foto_Website
+.DS_Store

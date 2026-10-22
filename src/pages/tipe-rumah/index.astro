@@ -1,14 +1,27 @@
 ---
-import HouseCard from "../../components/HouseCard.astro";
 import Icon from "../../components/Icon.astro";
+import Media from "../../components/Media.astro";
 import PageHeader from "../../components/PageHeader.astro";
+import PhotoGrid from "../../components/PhotoGrid.astro";
+import StatusBadge from "../../components/StatusBadge.astro";
 import WaButton from "../../components/WaButton.astro";
+import { BROSUR, FOTO_TIPE } from "../../content/foto";
 import { BEBAS_BIAYA } from "../../content/keunggulan";
 import { ALUR_BELI } from "../../content/pembelian";
 import Base from "../../layouts/Base.astro";
 import { getHouseTypes } from "../../lib/cms";
+import { hargaLabel, lantaiLabel } from "../../lib/format";
 
 const houses = await getHouseTypes(Astro.cache);
+const BROSUR_CAPTION = {
+	"brosur-masterplan": "Masterplan, lokasi & fasilitas",
+	"brosur-granada": "Cluster Granada 36/84",
+	"brosur-cordoba": "Cluster Cordoba 45/84",
+	"brosur-andalusia": "Andalusia 60/84",
+	"brosur-alexandria": "Alexandria 80/136",
+	"poster-pemandangan": "Hunian modern dengan pemandangan indah",
+	"brosur-book-now": "Hunian nyaman untuk keluarga",
+};
 const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.data.luas_tanah}`);
 ---
 
@@ -26,65 +39,120 @@ const daftar = houses.map((h) => `${h.data.nama} ${h.data.luas_bangunan}/${h.dat
 		</p>
 	</PageHeader>
 
-	<section class="container-page pt-8 pb-12 md:pt-10 md:pb-16">
-		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-			{houses.map((h, i) => (
-				<HouseCard
-					slug={h.id}
-					house={h.data}
-					heading="h2"
-					priority={i < 2}
-					class="reveal"
-					style={`--i: ${i}`}
-				/>
-			))}
-		</div>
-
-		<div class="border-line mt-12 overflow-x-auto rounded-(--radius-card) border bg-white">
-			<table class="w-full min-w-[34rem] text-left text-sm">
-				<caption class="p-4 text-left text-base font-semibold">Perbandingan singkat</caption>
-				<thead class="bg-sand">
-					<tr>
-						<th scope="col" class="px-4 py-3">
-							Tipe
-						</th>
-						<th scope="col" class="px-4 py-3">
-							LB/LT (m²)
-						</th>
-						<th scope="col" class="px-4 py-3">
-							Lantai
-						</th>
-						<th scope="col" class="px-4 py-3">
-							Kamar
-						</th>
-						<th scope="col" class="px-4 py-3">
-							Listrik
-						</th>
-					</tr>
-				</thead>
-				<tbody class="divide-y divide-(--color-line)">
-					{houses.map((h) => (
-						<tr>
-							<th scope="row" class="px-4 py-3">
-								<a
-									href={`/tipe-rumah/${h.id}`}
-									class="text-brand-green font-semibold hover:underline"
-								>
-									{h.data.nama}
-								</a>
-							</th>
-							<td class="px-4 py-3">
+	<section class="container-page pt-6 pb-12 md:pt-8 md:pb-16">
+		<nav aria-label="Lompat ke tipe rumah" class="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+			<ul class="flex gap-2">
+				{houses.map((h) => (
+					<li class="shrink-0">
+						<a
+							href={`#${h.id}`}
+							class="border-line hover:border-brand-green inline-flex min-h-11 items-center gap-2 rounded-(--radius-btn) border bg-white px-4 text-sm font-semibold"
+						>
+							{h.data.nama}
+							<span class="text-muted font-medium tabular-nums">
 								{h.data.luas_bangunan}/{h.data.luas_tanah}
-							</td>
-							<td class="px-4 py-3">{h.data.lantai}</td>
-							<td class="px-4 py-3">
-								{h.data.kamar_tidur} KT, {h.data.kamar_mandi} KM
-							</td>
-							<td class="px-4 py-3">{h.data.listrik}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+
+		<ol class="mt-8 divide-y divide-(--color-line) md:mt-10">
+			{houses.map((h, i) => {
+				const d = h.data;
+				const detail = `/tipe-rumah/${h.id}`;
+				const facts = [
+					{ icon: "stairs", label: "Lantai", value: lantaiLabel(d.lantai) },
+					{ icon: "bed", label: "Kamar", value: `${d.kamar_tidur} KT · ${d.kamar_mandi} KM` },
+					{ icon: "bolt", label: "Listrik", value: d.listrik },
+				] as const;
+				return (
+					<li
+						id={h.id}
+						class="grid gap-6 py-10 first:pt-0 last:pb-0 md:py-12 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-12"
+					>
+						<a href={detail} class="block" tabindex="-1" aria-hidden="true">
+							<Media
+								image={d.foto_utama}
+								fallback={FOTO_TIPE[h.id]?.foto}
+								alt={`Rumah tipe ${d.nama} ${d.luas_bangunan}/${d.luas_tanah}`}
+								ratio="3/2"
+								priority={i === 0}
+								sizes="(min-width: 64rem) 36rem, 100vw"
+							/>
+						</a>
+
+						<div>
+							<div class="flex flex-wrap items-center gap-3">
+								<h2 class="text-2xl md:text-3xl">Cluster {d.nama}</h2>
+								<StatusBadge status={d.ketersediaan} sisaUnit={d.sisa_unit} />
+							</div>
+							<p class="mt-2 text-5xl leading-none font-extrabold tracking-tight tabular-nums">
+								{d.luas_bangunan}
+								<span class="text-sage">/</span>
+								<span class="text-muted text-3xl">{d.luas_tanah}</span>
+							</p>
+							<p class="text-muted mt-1 text-xs">luas bangunan / tanah (m²)</p>
+
+							<dl class="border-line mt-6 grid grid-cols-3 gap-4 border-y py-4">
+								{facts.map((f) => (
+									<div>
+										<dt class="text-muted flex items-center gap-1.5 text-xs">
+											<Icon name={f.icon} class="size-4" />
+											{f.label}
+										</dt>
+										<dd class="mt-1 text-sm font-semibold">{f.value}</dd>
+									</div>
+								))}
+							</dl>
+
+							{d.fitur && d.fitur.length > 0 && (
+								<ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+									{d.fitur.map((f) => (
+										<li class="inline-flex items-center gap-1.5">
+											<Icon name="check" class="text-brand-green size-4" />
+											{f.teks}
+										</li>
+									))}
+								</ul>
+							)}
+
+							<p class="mt-5 text-lg font-bold">{hargaLabel(d)}</p>
+
+							<div class="mt-5 flex flex-col gap-3 sm:flex-row">
+								<a
+									href={detail}
+									class="bg-brand-green pressable hover:bg-brand-green-dark inline-flex min-h-12 items-center justify-center gap-2 rounded-(--radius-btn) px-5 font-semibold text-white"
+								>
+									Lihat Denah & Spesifikasi
+								</a>
+								<WaButton
+									variant="outline"
+									label="Tanya via WhatsApp"
+									ctx={{
+										kind: "tipe",
+										nama: d.nama,
+										luasBangunan: d.luas_bangunan,
+										luasTanah: d.luas_tanah,
+									}}
+								/>
+							</div>
+						</div>
+					</li>
+				);
+			})}
+		</ol>
+	</section>
+
+	<section class="border-line border-t py-12 md:py-16">
+		<div class="container-page">
+			<h2 class="text-2xl md:text-3xl">Brosur</h2>
+			<p class="text-muted mt-2 max-w-xl">
+				Ketuk brosur untuk memperbesar. Brosur dibuat tahun 2022; spesifikasi, bonus, dan harga
+				terbaru tanyakan ke tim marketing.
+			</p>
+			<PhotoGrid fotos={BROSUR} captions={BROSUR_CAPTION} cols={4} hint class="mt-6 md:mt-8" />
 		</div>
 	</section>
 

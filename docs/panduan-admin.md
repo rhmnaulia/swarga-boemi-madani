@@ -101,6 +101,9 @@ dan **Spesifikasi bangunan**. Untuk menambah baris, tekan **Tambahkan Item**.
 4. **Gambar denah**: tekan **Pilih gambar** dan unggah gambar denahnya.
 5. Tekan **Publikasikan**.
 
+Sebelum ada foto yang diunggah, website menampilkan foto bawaan dari brosur dan foto unit. Begitu foto
+diunggah di sini, foto bawaan untuk kolom itu otomatis diganti.
+
 Tips foto:
 
 - Foto langsung dari kamera HP tidak masalah. Website mengecilkan ukurannya sendiri.
@@ -119,7 +122,8 @@ Tips foto:
 5. Di **Foto**, tekan **Tambahkan Item Pertama**, lalu pilih foto. Ulangi untuk foto berikutnya.
 6. Tekan **Simpan**, lalu **Publikasikan**.
 
-Update terbaru tampil paling atas di halaman Progres.
+Update terbaru tampil paling atas di halaman Progres. Sebelum ada update pertama, halaman Progres
+menampilkan foto dokumentasi lapangan bawaan.
 
 [Screenshot: form Update Progres baru]
 
@@ -173,7 +177,7 @@ Ada 1 contoh testimoni bawaan yang tidak tampil. Ubah dengan data asli atau pind
    sengaja tertekan, tekan **Publikasikan sekarang** di bagian atas, lalu **Publikasikan sekarang** lagi di
    kotak konfirmasi.
 
-Logo website diunggah di **Pengaturan > Umum**.
+Logo website sudah terpasang. Untuk menggantinya, unggah logo baru di **Pengaturan > Umum**.
 
 ---
 

@@ -1,26 +1,21 @@
-/** Survey day options; the form and the server share this list. */
 export const HARI = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu", "Fleksibel"];
 
-/** "Minat" options: one per house type in the CMS, then the fixed ones. */
 export function minatOptions(tipe: string[]): string[] {
 	return [...tipe.map((t) => `Rumah tipe ${t}`), "Jasa konstruksi", "Lainnya"];
 }
 
 export type LeadEvent = "wa_click" | "form_survei";
 
-/** One row in the `Leads` sheet. Empty string means "not given". */
 export interface Lead {
 	timestamp: string;
 	event: LeadEvent;
 	page: string;
 	house_type: string;
 	nama: string;
-	/** Normalized to `628…`. */
 	whatsapp: string;
 	minat: string;
 	hari: string;
 	catatan: string;
-	/** utm_source, else the referring site, else "langsung", so the sheet can count by it. */
 	sumber: string;
 	utm_source: string;
 	utm_medium: string;
@@ -33,13 +28,11 @@ export type ParseResult =
 	| { ok: false; reason: "spam" }
 	| { ok: false; reason: "invalid"; fields: string[] };
 
-/** Accepts 08…, 628… and +628…, with spaces or dashes. Returns `628…` or null. */
 export function normalizeWa(raw: string): string | null {
 	const m = /^(?:\+?62|0)(8\d{7,12})$/.exec(raw.replace(/[\s\-.()]/g, ""));
 	return m ? `62${m[1]}` : null;
 }
 
-/** Same-site path only, so it is safe to redirect to. */
 export function safePath(raw: unknown): string {
 	const s = text(raw, 200);
 	return s.startsWith("/") && !s.startsWith("//") && !s.includes("\\") ? s : "";
@@ -47,7 +40,6 @@ export function safePath(raw: unknown): string {
 
 function text(raw: unknown, max: number): string {
 	if (typeof raw !== "string") return "";
-	// Drop control characters (keep newlines for "catatan").
 	return raw
 		.replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, "")
 		.trim()
@@ -62,10 +54,6 @@ function hostOf(url: string): string {
 	}
 }
 
-/**
- * Validates a WhatsApp click beacon or a survey form post.
- * `minat` is the list from `minatOptions`, only needed for the form.
- */
 export function parseLead(
 	input: Record<string, unknown>,
 	minat: string[] = [],

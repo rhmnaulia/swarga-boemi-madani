@@ -1,12 +1,9 @@
 ---
-// GA4 when `PUBLIC_GA4_ID` is set at build time, plus the WhatsApp click and source tracking.
 const id = import.meta.env.PUBLIC_GA4_ID;
 const ga4 = typeof id === "string" && /^G-[A-Z0-9]+$/.test(id) ? id : null;
 ---
 
 {ga4 && <script is:inline define:vars={{ ga4 }}>
-	// Events queue in dataLayer right away; gtag.js itself loads once the page is idle,
-	// so it never competes with the first paint on a slow phone.
 	window.dataLayer = window.dataLayer || [];
 	window.gtag = function () {
 		dataLayer.push(arguments);

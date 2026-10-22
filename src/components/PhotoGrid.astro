@@ -1,0 +1,37 @@
+---
+import { FOTO_ALT, type FotoKey } from "../content/foto";
+import ZoomImage from "./ZoomImage.astro";
+
+interface Props {
+	fotos: FotoKey[];
+	captions?: Partial<Record<FotoKey, string>>;
+	cols?: 2 | 3 | 4;
+	hint?: boolean;
+	class?: string;
+}
+
+const { fotos, captions = {}, cols = 3, hint = false, class: className } = Astro.props;
+const colClass = {
+	2: "sm:columns-2",
+	3: "sm:columns-2 lg:columns-3",
+	4: "sm:columns-3 lg:columns-4",
+}[cols];
+const sizes = {
+	2: "(min-width: 40rem) 50vw, 50vw",
+	3: "(min-width: 64rem) 33vw, 50vw",
+	4: "(min-width: 64rem) 25vw, (min-width: 40rem) 33vw, 50vw",
+}[cols];
+---
+
+<ul class:list={["columns-2 gap-3 md:gap-4", colClass, className]}>
+	{fotos.map((foto) => (
+		<li class="mb-3 break-inside-avoid md:mb-4">
+			<figure>
+				<ZoomImage fallback={foto} alt={FOTO_ALT[foto]} natural {hint} sizes={sizes} />
+				<figcaption class="text-muted mt-1.5 text-sm">
+					{captions[foto] ?? FOTO_ALT[foto]}
+				</figcaption>
+			</figure>
+		</li>
+	))}
+</ul>

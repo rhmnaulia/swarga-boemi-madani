@@ -1,5 +1,3 @@
-// Facts that rarely change. Edit here, not in the CMS.
-
 export const PROJECT_NAME = "Swarga Boemi Madani Residence";
 export const SHORT_NAME = "Swarga Boemi Madani";
 export const COMPANY = "PT. Abyakta Sadawira Bangun Mandiri";
@@ -18,7 +16,6 @@ export const ADDRESS_LINE = `${ADDRESS.street}, ${ADDRESS.village}, ${ADDRESS.di
 export const WA_DISPLAY = "0811-2052-225";
 export const WA_TEL = "+628112052225";
 
-// TODO(data): agency name and link for the footer credit (needs client agreement).
 export const AGENCY_CREDIT: { name: string; url?: string } | null = null;
 
 export const NAV = [

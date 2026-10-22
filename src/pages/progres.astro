@@ -1,13 +1,22 @@
 ---
 import Media from "../components/Media.astro";
 import PageHeader from "../components/PageHeader.astro";
+import PhotoGrid from "../components/PhotoGrid.astro";
 import WaButton from "../components/WaButton.astro";
+import type { FotoKey } from "../content/foto";
 import { QC_STEPS } from "../content/keunggulan";
 import Base from "../layouts/Base.astro";
 import { getProgress } from "../lib/cms";
 import { formatTanggal } from "../lib/format";
 
 const updates = await getProgress(Astro.cache);
+const DOKUMENTASI: FotoKey[] = [
+	"progres-pondasi",
+	"progres-2-lantai",
+	"progres-paving",
+	"qc-inspeksi",
+	"granada-unit",
+];
 ---
 
 <Base
@@ -39,13 +48,17 @@ const updates = await getProgress(Astro.cache);
 
 		<div>
 			{updates.length === 0 ? (
-				<div class="border-line rounded-(--radius-card) border border-dashed bg-white p-8 text-center">
-					<p class="font-semibold">Update progres segera dibagikan di sini.</p>
-					<p class="text-muted mt-1">
-						Ingin melihat kondisi terbaru sekarang? Tanyakan ke tim marketing kami.
-					</p>
-					<div class="mt-5">
-						<WaButton />
+				<div>
+					<h2 class="text-xl">Dokumentasi lapangan</h2>
+					<PhotoGrid fotos={DOKUMENTASI} class="mt-4" />
+					<div class="border-line mt-8 rounded-(--radius-card) border border-dashed bg-white p-6">
+						<p class="font-semibold">Update progres bertanggal segera dibagikan di sini.</p>
+						<p class="text-muted mt-1">
+							Ingin melihat kondisi terbaru sekarang? Tanyakan ke tim marketing kami.
+						</p>
+						<div class="mt-5">
+							<WaButton />
+						</div>
 					</div>
 				</div>
 			) : (
