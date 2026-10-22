@@ -4,12 +4,13 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-02-24",
 	"compatibility_flags": ["nodejs_compat"],
-	// Resource IDs are filled in by `wrangler d1 create` / `wrangler kv namespace create`
-	// on the client's Cloudflare account. See README "Deploy".
+	// Resource IDs from `wrangler d1 create` / `wrangler kv namespace create`. These point at the
+	// developer's personal account (temporary, workers.dev); replace them at handover. See README "Deploy".
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "swarga-boemi-madani",
+			"database_id": "0ac85267-a0c6-4295-851e-67024dcfe2cc",
 		},
 	],
 	"r2_buckets": [
@@ -21,6 +22,7 @@
 	"kv_namespaces": [
 		{
 			"binding": "CACHE",
+			"id": "69f0a57f682046da854fd587236e41fc",
 		},
 	],
 	"images": {

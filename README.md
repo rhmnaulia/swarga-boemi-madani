@@ -122,6 +122,11 @@ pnpm deploy                                          # then purge the zone cache
 pnpm exec emdash doctor                              # checks scheduler wiring
 ```
 
+On the first request EmDash migrates the empty D1 database (90+ migrations). For a minute or so some pages may
+answer 503 until every Worker isolate retries; they recover on their own. `src/worker.ts` marks 5xx responses
+`no-store` so an error never sits in the edge cache. To migrate ahead of traffic instead:
+`CLOUDFLARE_API_TOKEN=… pnpm exec emdash migrate --from-config --account-id <id>`.
+
 The Images binding needs Cloudflare Images enabled on the account (free plan is enough).
 The SESSION KV binding is added automatically by the Astro Cloudflare adapter.
 
